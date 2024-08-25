@@ -2,20 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 
 class CustomIconButton extends StatelessWidget {
-  const CustomIconButton({super.key});
+  final double size;
+  final double padding;
+  final double radius;
+  final Color bgColor;
+  final String icons;
+  final VoidCallback handler; 
+
+  const CustomIconButton({
+    this.size = 36,
+    this.radius = 10,
+    this.padding = 6,
+    this.bgColor = AppColors.BiruSecondary,
+    required this.icons,
+    required this.handler,
+    super.key
+    });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: handler,
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
         child: Container(
-            color: AppColors.BiruSecondary,
-            height: 36,
+            color: bgColor,
+            height: size,
             child: Padding(
-              padding: EdgeInsets.all(6),
-              child: Image.asset('assets/icons/ic_edit_blue.png'),
+              padding: EdgeInsets.all(padding),
+              child: Image.asset(icons),
             )),
       ),
     );

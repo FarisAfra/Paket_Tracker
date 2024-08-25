@@ -4,9 +4,11 @@ import 'package:paket_tracker_app/screens/widgets/buttons/icon_text_button.dart'
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
+import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
 import 'package:paket_tracker_app/screens/widgets/texts/title_detail.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -53,9 +55,9 @@ class _HomepageState extends State<Homepage> {
             FeatureApp(),
             AppSpacer.VerticalSpacerSmall,
             TitleDetail(
-              textTitle: 'Pencarian Terakhir', 
-              textDetail: 'Lihat Semua', 
-              handler: (){}),
+                textTitle: 'Pencarian Terakhir',
+                textDetail: 'Lihat Semua',
+                handler: () {}),
             AppSpacer.VerticalSpacerSmall,
             Expanded(child: DataRiwayatBuilder())
           ],
@@ -152,7 +154,15 @@ Widget FeatureApp() {
 
 Widget DataRiwayatBuilder() {
   List<Map<String, String>> items = [
-    {"awb": "JT1000927741", "courier": "J&T Express", "origin": "Jakarta, Indonesia", "destination": "Bogor, Jawa Barat", "shiper": "Apple Store", "reciever": "Faris Afra M", "desc": "Processed At Sorting Center [Depok]"},
+    {
+      "awb": "JT1000927741",
+      "courier": "J&T Express",
+      "origin": "Jakarta, Indonesia",
+      "destination": "Bogor, Jawa Barat",
+      "shiper": "Apple Store",
+      "reciever": "Faris Afra M",
+      "desc": "Processed At Sorting Center [Depok]"
+    },
   ];
 
   return Center(
@@ -161,15 +171,111 @@ Widget DataRiwayatBuilder() {
       itemBuilder: (_, index) {
         var item = items[index];
         return Card(
-            color: Colors.white,
-            child: Center(
-                child: Column(
+          color: Colors.white,
+          child: Center(
+              child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('data')
+                    LogoJNT(),
+                    AppSpacer.HorizontalSpacerLarge,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('JT100092322', style: AppFonts.poppinsBold()),
+                        Text(
+                          'Kurir: J&T',
+                          style: AppFonts.poppinsLight(fontSize: 10),
+                        )
+                      ],
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      child: Image.asset(
+                        AppIcons.IcMoreBlack,
+                        height: 20,
+                      ),
+                    )
+                  ],
+                ),
+                Divider(color: AppColors.BgPutih),
+
+                TimelineTile(
+                    alignment: TimelineAlign.start,
+                    isFirst: true,
+                    indicatorStyle:
+                        IndicatorStyle(color: AppColors.Hitam, width: 10),
+                    beforeLineStyle:
+                        LineStyle(color: AppColors.AbuMuda, thickness: 2),
+                    endChild: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppSpacer.VerticalSpacerLarge,
+                          Text(
+                            'Pengirim:',
+                            style: AppFonts.poppinsLight(fontSize: 12),
+                          ),
+                          Row(
+                            children: [
+                              Text('Apple Store, ',
+                                  style: AppFonts.poppinsBold(fontSize: 14)),
+                              Text('Jakarta',
+                                  style: AppFonts.poppinsBold(fontSize: 14)),
+                            ],
+                          ),
+                          AppSpacer.VerticalSpacerLarge
+                        ],
+                      ),
+                    )),
+                
+                TimelineTile(
+                    alignment: TimelineAlign.start,
+                    isLast: true,
+                    indicatorStyle:
+                        IndicatorStyle(color: AppColors.AbuMuda, width: 10),
+                    beforeLineStyle:
+                        LineStyle(color: AppColors.AbuMuda, thickness: 2),
+                    endChild: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppSpacer.VerticalSpacerLarge,
+                          Text(
+                            'Penerima:',
+                            style: AppFonts.poppinsLight(fontSize: 12),
+                          ),
+                          Row(
+                            children: [
+                              Text('Faris Afra, ',
+                                  style: AppFonts.poppinsBold(fontSize: 14)),
+                              Text('Bogor',
+                                  style: AppFonts.poppinsBold(fontSize: 14)),
+                            ],
+                          ),
+                          AppSpacer.VerticalSpacerLarge
+                        ],
+                      ),
+                    )),
+                
+                Divider(color: AppColors.BgPutih),
+
+                Row(
+                  children: [
+                    Text('Status: ',
+                        style: AppFonts.poppinsLight(fontSize: 12)),
+                    Text('Processed At Sorting Center [Depok]', style: AppFonts.poppinsBold(fontSize: 12)),
                   ],
                 )
-              ),
-          );
+              ],
+            ),
+          )),
+        );
       },
     ),
   );

@@ -31,6 +31,7 @@ class CustomIconTextButton extends StatelessWidget {
         Text(
           text,
           style: AppFonts.poppinsRegular(fontSize: 10),
+          textAlign: TextAlign.center,
         )
       ],
     );

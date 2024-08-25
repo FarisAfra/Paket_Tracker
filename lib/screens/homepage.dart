@@ -3,6 +3,7 @@ import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_text_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
+import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
 
@@ -37,8 +38,7 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
         actions: [
-          CustomIconButton(
-              icons: 'assets/icons/ic_notification_blue.png', handler: () {}),
+          CustomIconButton(icons: AppIcons.IcNotificationBlue, handler: () {}),
           SizedBox(width: 20)
         ],
       ),
@@ -67,7 +67,7 @@ Widget LacakPaket() {
         children: [
           Align(
             alignment: Alignment.centerRight,
-            child: Image.asset('assets/icons/ic_location_transparent.png'),
+            child: Image.asset(AppIcons.IcLocationTransparent),
           ),
           Align(
               alignment: Alignment.centerLeft,
@@ -87,7 +87,7 @@ Widget LacakPaket() {
                         CustomTextfieldsIcon(),
                         AppSpacer.HorizontalSpacerExtraSmall,
                         CustomIconButton(
-                          icons: 'assets/icons/ic_track_white.png',
+                          icons: AppIcons.IcTrackWhite,
                           bgColor: AppColors.BiruPrimary,
                           handler: () {},
                         )
@@ -118,13 +118,23 @@ Widget FeatureApp() {
               ),
               AppSpacer.HorizontalSpacerLarge,
               CustomIconTextButton(
-                  icons: 'assets/icons/ic_track_blue.png',
+                  icons: AppIcons.IcTrackBlue,
                   text: 'Lacak\nPaket',
                   handler: () {}),
               AppSpacer.HorizontalSpacerLarge,
               CustomIconTextButton(
-                  icons: 'assets/icons/ic_track_blue.png',
-                  text: 'Lacak\nPaket',
+                  icons: AppIcons.IcOngkirBlue,
+                  text: 'Cek\nOngkir',
+                  handler: () {}),
+              AppSpacer.HorizontalSpacerLarge,
+              CustomIconTextButton(
+                  icons: AppIcons.IcBookmarkBlue,
+                  text: 'Bookmark\nSaya',
+                  handler: () {}),
+              AppSpacer.HorizontalSpacerLarge,
+              CustomIconTextButton(
+                  icons: AppIcons.IcHistoryBlue,
+                  text: 'Riwayat\nPencarian',
                   handler: () {}),
             ]),
           ),

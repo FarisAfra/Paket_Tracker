@@ -6,6 +6,7 @@ import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
+import 'package:paket_tracker_app/screens/widgets/texts/title_detail.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -50,6 +51,13 @@ class _HomepageState extends State<Homepage> {
             LacakPaket(),
             AppSpacer.VerticalSpacerLarge,
             FeatureApp(),
+            AppSpacer.VerticalSpacerSmall,
+            TitleDetail(
+              textTitle: 'Pencarian Terakhir', 
+              textDetail: 'Lihat Semua', 
+              handler: (){}),
+            AppSpacer.VerticalSpacerSmall,
+            Expanded(child: DataRiwayatBuilder())
           ],
         ),
       )),
@@ -139,5 +147,30 @@ Widget FeatureApp() {
             ]),
           ),
         )),
+  );
+}
+
+Widget DataRiwayatBuilder() {
+  List<Map<String, String>> items = [
+    {"awb": "JT1000927741", "courier": "J&T Express", "origin": "Jakarta, Indonesia", "destination": "Bogor, Jawa Barat", "shiper": "Apple Store", "reciever": "Faris Afra M", "desc": "Processed At Sorting Center [Depok]"},
+  ];
+
+  return Center(
+    child: ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (_, index) {
+        var item = items[index];
+        return Card(
+            color: Colors.white,
+            child: Center(
+                child: Column(
+                  children: [
+                    Text('data')
+                  ],
+                )
+              ),
+          );
+      },
+    ),
   );
 }

@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 
 class AppFonts {
-  static TextStyle poppinsThin({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsThin(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w100,
@@ -13,7 +14,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsExtraLight({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsExtraLight(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w200,
@@ -23,7 +25,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsLight({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsLight(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w300,
@@ -33,7 +36,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsRegular({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsRegular(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w400,
@@ -43,7 +47,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsMedium({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsMedium(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w500,
@@ -53,7 +58,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsSemiBold({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsSemiBold(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w600,
@@ -63,7 +69,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsBold({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsBold(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w700,
@@ -73,7 +80,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsExtraBold({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsExtraBold(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w800,
@@ -83,7 +91,8 @@ class AppFonts {
     );
   }
 
-  static TextStyle poppinsBlack({double fontSize = 12, Color color = AppColors.Hitam}) {
+  static TextStyle poppinsBlack(
+      {double fontSize = 12, Color color = AppColors.Hitam}) {
     return GoogleFonts.poppins(
       textStyle: TextStyle(
         fontWeight: FontWeight.w900,

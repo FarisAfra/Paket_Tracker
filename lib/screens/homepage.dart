@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:paket_tracker_app/screens/bookmark_paket.dart';
+import 'package:paket_tracker_app/screens/cek_ongkir.dart';
+import 'package:paket_tracker_app/screens/lacak_paket.dart';
+import 'package:paket_tracker_app/screens/riwayat_pencarian.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_text_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/nav_button.dart';
@@ -26,7 +30,13 @@ class _HomepageState extends State<Homepage> {
       case 0:
         return KontenHomepage();
       case 1:
+        return CekOngkir();
+      case 2:
         return LacakPaket();
+      case 3:
+        return BookmarkPaket();
+      case 4:
+        return RiwayatPencarian();
       default:
         return KontenHomepage();
     }
@@ -66,23 +76,39 @@ class _HomepageState extends State<Homepage> {
                       icons: _currentIndex == 0
                       ? AppIcons.IcNavHomeBlue
                       : AppIcons.IcNavHomeBlack, 
-                      handler: () {}),
+                      handler: () {
+                        setState(() {
+                                _currentIndex = 0;
+                              });
+                      }),
                   CustomNavButton(
                       icons: _currentIndex == 1
                       ? AppIcons.IcNavOngkirBlue
                       : AppIcons.IcNavOngkirBlack, 
-                      handler: () {}),
+                      handler: () {
+                        setState(() {
+                                _currentIndex = 1;
+                              });
+                      }),
                   Container(width: 75),
                   CustomNavButton(
-                      icons: _currentIndex == 4
+                      icons: _currentIndex == 3
                       ? AppIcons.IcNavBookmarkBlue
                       : AppIcons.IcNavBookmarkBlack, 
-                      handler: () {}),
+                      handler: () {
+                        setState(() {
+                                _currentIndex = 3;
+                              });
+                      }),
                   CustomNavButton(
-                      icons: _currentIndex == 5
+                      icons: _currentIndex == 4
                       ? AppIcons.IcNavHistoryBlue
                       : AppIcons.IcNavHistoryBlack, 
-                      handler: () {}),
+                      handler: () {
+                        setState(() {
+                                _currentIndex = 4;
+                              });
+                      }),
                 ],
               ),
             )),
@@ -92,7 +118,11 @@ class _HomepageState extends State<Homepage> {
               child: CustomNavButton(
                       icons: AppIcons.IcNavTrackBtn, 
                       height: 90, 
-                      handler: () {}),)
+                      handler: () {
+                        setState(() {
+                                _currentIndex = 2;
+                              });
+                      }),)
             )
       ],
     );
@@ -141,7 +171,7 @@ class _KontenHomepageState extends State<KontenHomepage> {
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Column(
               children: [
-                LacakPaket(),
+                LacakPaketWidget(),
                 AppSpacer.VerticalSpacerLarge,
                 FeatureApp(),
                 TitleDetail(
@@ -165,7 +195,7 @@ class _KontenHomepageState extends State<KontenHomepage> {
   }
 }
 
-Widget LacakPaket() {
+Widget LacakPaketWidget() {
   return ClipRRect(
     borderRadius: BorderRadius.all(Radius.circular(10)),
     child: Container(

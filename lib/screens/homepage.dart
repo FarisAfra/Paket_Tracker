@@ -28,7 +28,7 @@ class _HomepageState extends State<Homepage> {
   Widget _getCurrentWidget() {
     switch (_currentIndex) {
       case 0:
-        return KontenHomepage();
+        return KontenHomepage(onSectionSelected: _onSectionSelected);
       case 1:
         return CekOngkir();
       case 2:
@@ -38,99 +38,180 @@ class _HomepageState extends State<Homepage> {
       case 4:
         return RiwayatPencarian();
       default:
-        return KontenHomepage();
+        return KontenHomepage(onSectionSelected: _onSectionSelected);
     }
+  }
+
+  void _onSectionSelected(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        //konten
-        _getCurrentWidget(),
-
-        //navbar
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 70,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    blurRadius: 90,
-                    spreadRadius: 0,
-                    offset: const Offset(0, 4),
-                  ),
+    return Scaffold(
+      backgroundColor: AppColors.BgPutih,
+      appBar: _currentIndex == 0
+          ? AppBar(
+              backgroundColor: AppColors.Putih,
+              leading: Row(
+                children: [
+                  SizedBox(width: 20),
+                  Image.asset('assets/images/placeholder_avatar.png',
+                      height: 36),
                 ],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+              ),
+              title: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Halo, Selamat Datang',
+                        style: AppFonts.poppinsLight()),
+                    Text('Lorem Ipsum',
+                        style: AppFonts.poppinsExtraBold(fontSize: 16)),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                CustomIconButton(
+                    icons: AppIcons.IcNotificationBlue, handler: () {}),
+                SizedBox(width: 20)
+              ],
+            )
+          : AppBar(
+              backgroundColor: AppColors.Putih,
+              leading: Row(
                 children: [
-                  CustomNavButton(
-                      icons: _currentIndex == 0
-                      ? AppIcons.IcNavHomeBlue
-                      : AppIcons.IcNavHomeBlack, 
+                  SizedBox(width: 20),
+                  CustomIconButton(
+                      icons: AppIcons.IcBackBlue,
+                      bgColor: AppColors.Putih,
                       handler: () {
                         setState(() {
-                                _currentIndex = 0;
-                              });
-                      }),
-                  CustomNavButton(
-                      icons: _currentIndex == 1
-                      ? AppIcons.IcNavOngkirBlue
-                      : AppIcons.IcNavOngkirBlack, 
-                      handler: () {
-                        setState(() {
-                                _currentIndex = 1;
-                              });
-                      }),
-                  Container(width: 75),
-                  CustomNavButton(
-                      icons: _currentIndex == 3
-                      ? AppIcons.IcNavBookmarkBlue
-                      : AppIcons.IcNavBookmarkBlack, 
-                      handler: () {
-                        setState(() {
-                                _currentIndex = 3;
-                              });
-                      }),
-                  CustomNavButton(
-                      icons: _currentIndex == 4
-                      ? AppIcons.IcNavHistoryBlue
-                      : AppIcons.IcNavHistoryBlack, 
-                      handler: () {
-                        setState(() {
-                                _currentIndex = 4;
-                              });
-                      }),
+                          _currentIndex = 0;
+                        });
+                      })
                 ],
               ),
-            )),
-            Align(
+              title: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Paket Tracker', style: AppFonts.poppinsLight()),
+                    Text(
+                        _currentIndex == 1
+                            ? 'Cek Ongkir'
+                            : _currentIndex == 2
+                                ? 'Lacak Paket'
+                                : _currentIndex == 3
+                                    ? 'Bookmark Paket'
+                                    : _currentIndex == 4
+                                        ? 'Riwayat Pencarian'
+                                        : 'Nama Halaman',
+                        style: AppFonts.poppinsBold(fontSize: 16)),
+                  ],
+                ),
+              ),
+              actions: [
+                CustomIconButton(
+                    icons: AppIcons.IcNotificationBlue, handler: () {}),
+                SizedBox(width: 20)
+              ],
+            ),
+      body: Stack(
+        children: [
+          //konten
+          _getCurrentWidget(),
+
+          //navbar
+          Align(
               alignment: Alignment.bottomCenter,
-              child: Padding(padding: EdgeInsets.only(bottom: 12),
-              child: CustomNavButton(
-                      icons: AppIcons.IcNavTrackBtn, 
-                      height: 90, 
-                      handler: () {
-                        setState(() {
-                                _currentIndex = 2;
-                              });
-                      }),)
-            )
-      ],
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      blurRadius: 90,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomNavButton(
+                        icons: _currentIndex == 0
+                            ? AppIcons.IcNavHomeBlue
+                            : AppIcons.IcNavHomeBlack,
+                        handler: () {
+                          setState(() {
+                            _currentIndex = 0;
+                          });
+                        }),
+                    CustomNavButton(
+                        icons: _currentIndex == 1
+                            ? AppIcons.IcNavOngkirBlue
+                            : AppIcons.IcNavOngkirBlack,
+                        handler: () {
+                          setState(() {
+                            _currentIndex = 1;
+                          });
+                        }),
+                    Container(width: 75),
+                    CustomNavButton(
+                        icons: _currentIndex == 3
+                            ? AppIcons.IcNavBookmarkBlue
+                            : AppIcons.IcNavBookmarkBlack,
+                        handler: () {
+                          setState(() {
+                            _currentIndex = 3;
+                          });
+                        }),
+                    CustomNavButton(
+                        icons: _currentIndex == 4
+                            ? AppIcons.IcNavHistoryBlue
+                            : AppIcons.IcNavHistoryBlack,
+                        handler: () {
+                          setState(() {
+                            _currentIndex = 4;
+                          });
+                        }),
+                  ],
+                ),
+              )),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 12),
+                child: CustomNavButton(
+                    icons: AppIcons.IcNavTrackBtn,
+                    height: 90,
+                    handler: () {
+                      setState(() {
+                        _currentIndex = 2;
+                      });
+                    }),
+              ))
+        ],
+      ),
     );
   }
 }
 
 class KontenHomepage extends StatefulWidget {
-  const KontenHomepage({super.key});
+  final Function(int) onSectionSelected;
+
+  const KontenHomepage({required this.onSectionSelected});
 
   @override
   State<KontenHomepage> createState() => _KontenHomepageState();
@@ -141,37 +222,16 @@ class _KontenHomepageState extends State<KontenHomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.BgPutih,
-        appBar: AppBar(
-          leading: Row(
-            children: [
-              SizedBox(width: 20),
-              Image.asset('assets/images/placeholder_avatar.png', height: 36),
-            ],
-          ),
-          title: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text('Halo, Selamat Datang', style: AppFonts.poppinsLight()),
-                Text('Lorem Ipsum',
-                    style: AppFonts.poppinsExtraBold(fontSize: 16)),
-              ],
-            ),
-          ),
-          actions: [
-            CustomIconButton(
-                icons: AppIcons.IcNotificationBlue, handler: () {}),
-            SizedBox(width: 20)
-          ],
-        ),
         body: SingleChildScrollView(
           child: Center(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Column(
               children: [
-                LacakPaketWidget(),
+                LacakPaketWidget(
+                  handler: () { 
+                    widget.onSectionSelected(2);
+                   },),
                 AppSpacer.VerticalSpacerLarge,
                 FeatureApp(),
                 TitleDetail(
@@ -195,8 +255,17 @@ class _KontenHomepageState extends State<KontenHomepage> {
   }
 }
 
-Widget LacakPaketWidget() {
-  return ClipRRect(
+class LacakPaketWidget extends StatelessWidget {
+  final VoidCallback handler;
+
+  const LacakPaketWidget({
+    required this.handler,
+    super.key
+    });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
     borderRadius: BorderRadius.all(Radius.circular(10)),
     child: Container(
       color: AppColors.BiruSecondary,
@@ -222,12 +291,12 @@ Widget LacakPaketWidget() {
                     AppSpacer.VerticalSpacerSmall,
                     Row(
                       children: [
-                        CustomTextfieldsIcon(),
+                        CustomTextfieldsIcon(icons: AppIcons.IcPackageSearchGrey, hintText: 'Masukkan No. Resi',),
                         AppSpacer.HorizontalSpacerSmall,
                         CustomIconButton(
                           icons: AppIcons.IcTrackWhite,
                           bgColor: AppColors.BiruPrimary,
-                          handler: () {},
+                          handler: handler,
                         )
                       ],
                     ),
@@ -238,6 +307,7 @@ Widget LacakPaketWidget() {
       ),
     ),
   );
+  }
 }
 
 Widget FeatureApp() {

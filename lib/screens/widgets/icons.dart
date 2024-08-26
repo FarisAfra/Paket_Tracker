@@ -29,4 +29,15 @@ class AppIcons {
   static const String IcPackageSearchGrey = 'assets/icons/ic_package_search_grey.png';
 
   static const String IcLocationTransparent = 'assets/icons/ic_location_transparent.png';
+  
+  static const String IcNavHomeBlack = 'assets/icons/ic_nav_home_black.png';
+  static const String IcNavOngkirBlack = 'assets/icons/ic_nav_ongkir_black.png';
+  static const String IcNavBookmarkBlack = 'assets/icons/ic_nav_bookmark_black.png';
+  static const String IcNavHistoryBlack = 'assets/icons/ic_nav_history_black.png';
+  static const String IcNavHomeBlue = 'assets/icons/ic_nav_home_blue.png';
+  static const String IcNavOngkirBlue  = 'assets/icons/ic_nav_ongkir_blue.png';
+  static const String IcNavBookmarkBlue  = 'assets/icons/ic_nav_bookmark_blue.png';
+  static const String IcNavHistoryBlue  = 'assets/icons/ic_nav_history_blue.png';
+  static const String IcNavTrackBtn  = 'assets/icons/ic_nav_track_btn.png';
+  
 }

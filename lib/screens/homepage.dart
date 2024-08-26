@@ -21,49 +21,60 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.BgPutih,
-      appBar: AppBar(
-        leading: Row(
-          children: [
-            SizedBox(width: 20),
-            Image.asset('assets/images/placeholder_avatar.png', height: 36),
-          ],
-        ),
-        title: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+        backgroundColor: AppColors.BgPutih,
+        appBar: AppBar(
+          leading: Row(
             children: [
-              Text('Halo, Selamat Datang', style: AppFonts.poppinsLight()),
-              Text('Lorem Ipsum',
-                  style: AppFonts.poppinsExtraBold(fontSize: 16)),
+              SizedBox(width: 20),
+              Image.asset('assets/images/placeholder_avatar.png', height: 36),
             ],
           ),
-        ),
-        actions: [
-          CustomIconButton(icons: AppIcons.IcNotificationBlue, handler: () {}),
-          SizedBox(width: 20)
-        ],
-      ),
-      body: Center(
-          child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        child: Column(
-          children: [
-            LacakPaket(),
-            AppSpacer.VerticalSpacerLarge,
-            FeatureApp(),
-            AppSpacer.VerticalSpacerSmall,
-            TitleDetail(
-                textTitle: 'Pencarian Terakhir',
-                textDetail: 'Lihat Semua',
-                handler: () {}),
-            AppSpacer.VerticalSpacerSmall,
-            Expanded(child: DataRiwayatBuilder())
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Halo, Selamat Datang', style: AppFonts.poppinsLight()),
+                Text('Lorem Ipsum',
+                    style: AppFonts.poppinsExtraBold(fontSize: 16)),
+              ],
+            ),
+          ),
+          actions: [
+            CustomIconButton(
+                icons: AppIcons.IcNotificationBlue, handler: () {}),
+            SizedBox(width: 20)
           ],
         ),
-      )),
-    );
+        body: SingleChildScrollView(
+          child: Center(
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Column(
+              children: [
+                LacakPaket(),
+                AppSpacer.VerticalSpacerLarge,
+                FeatureApp(),
+                TitleDetail(
+                    textTitle: 'Pencarian Terakhir',
+                    textDetail: 'Lihat Semua',
+                    handler: () {}
+                ),
+                DataRiwayatTerakhir(),
+                TitleDetail(
+                    textTitle: 'Bookmark Anda',
+                    textDetail: 'Lihat Semua',
+                    handler: () {}
+                ),
+                Container(
+                  height: 170,
+                  child: Expanded(child: DataBookmark()),
+                ),
+                
+              ],
+            ),
+          )),
+        ));
   }
 }
 
@@ -95,7 +106,7 @@ Widget LacakPaket() {
                     Row(
                       children: [
                         CustomTextfieldsIcon(),
-                        AppSpacer.HorizontalSpacerExtraSmall,
+                        AppSpacer.HorizontalSpacerSmall,
                         CustomIconButton(
                           icons: AppIcons.IcTrackWhite,
                           bgColor: AppColors.BiruPrimary,
@@ -126,22 +137,22 @@ Widget FeatureApp() {
                 'assets/images/logo_app_2_blue.png',
                 width: 45,
               ),
-              AppSpacer.HorizontalSpacerLarge,
+              Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcTrackBlue,
                   text: 'Lacak\nPaket',
                   handler: () {}),
-              AppSpacer.HorizontalSpacerLarge,
+              Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcOngkirBlue,
                   text: 'Cek\nOngkir',
                   handler: () {}),
-              AppSpacer.HorizontalSpacerLarge,
+              Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcBookmarkBlue,
                   text: 'Bookmark\nSaya',
                   handler: () {}),
-              AppSpacer.HorizontalSpacerLarge,
+              Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcHistoryBlue,
                   text: 'Riwayat\nPencarian',
@@ -152,22 +163,169 @@ Widget FeatureApp() {
   );
 }
 
-Widget DataRiwayatBuilder() {
+Widget DataRiwayatTerakhir() {
   List<Map<String, String>> items = [
     {
       "awb": "JT1000927741",
       "courier": "J&T Express",
-      "origin": "Jakarta, Indonesia",
-      "destination": "Bogor, Jawa Barat",
+      "origin": "Jakarta, Indonesia, Dunia, Bima Sakti",
+      "destination": "Bogor, Jawa Barat, Indonesia, Dunia, Bima Sakti",
       "shiper": "Apple Store",
       "reciever": "Faris Afra M",
-      "desc": "Processed At Sorting Center [Depok]"
+      "desc": "Processed At Sorting Center [Depok, Jawa barat]"
+    },
+  ];
+
+  return Center(
+    child: Container(
+        width: double.infinity,
+        child: Column(
+          children: [
+            Card(
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        LogoJNT(),
+                        AppSpacer.HorizontalSpacerLarge,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(items[0]["awb"]!, style: AppFonts.poppinsBold()),
+                            Text(
+                              '${items[0]["courier"]}',
+                              style: AppFonts.poppinsLight(fontSize: 10),
+                            )
+                          ],
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          child: Image.asset(
+                            AppIcons.IcMoreBlack,
+                            height: 20,
+                          ),
+                        )
+                      ],
+                    ),
+                    Divider(color: AppColors.BgPutih),
+                    TimelineTile(
+                        alignment: TimelineAlign.start,
+                        isFirst: true,
+                        indicatorStyle:
+                            IndicatorStyle(color: AppColors.Hitam, width: 10),
+                        beforeLineStyle:
+                            LineStyle(color: AppColors.AbuMuda, thickness: 2),
+                        endChild: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppSpacer.VerticalSpacerLarge,
+                              Text(
+                                'Pengirim:',
+                                style: AppFonts.poppinsLight(fontSize: 12),
+                              ),
+                              Container(
+                                child: Text('${items[0]["shiper"]}, ${items[0]["origin"]}',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppFonts.poppinsBold(fontSize: 14)),
+                              ),
+                              AppSpacer.VerticalSpacerLarge
+                            ],
+                          ),
+                        )),
+                    TimelineTile(
+                        alignment: TimelineAlign.start,
+                        isLast: true,
+                        indicatorStyle:
+                            IndicatorStyle(color: AppColors.AbuMuda, width: 10),
+                        beforeLineStyle:
+                            LineStyle(color: AppColors.AbuMuda, thickness: 2),
+                        endChild: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppSpacer.VerticalSpacerLarge,
+                              Text(
+                                'Penerima:',
+                                style: AppFonts.poppinsLight(fontSize: 12),
+                              ),
+                              Container(
+                                child: Text(
+                                    '${items[0]["reciever"]}, ${items[0]["destination"]}',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppFonts.poppinsBold(fontSize: 14)),
+                              ),
+                              AppSpacer.VerticalSpacerLarge
+                            ],
+                          ),
+                        )),
+                    Divider(color: AppColors.BgPutih),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Status: ',
+                            style: AppFonts.poppinsLight(fontSize: 12)),
+                        Flexible(
+                          child: Text(items[0]["desc"]!,
+                              style: AppFonts.poppinsBold(fontSize: 12)),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+  );
+}
+
+Widget DataBookmark() {
+  List<Map<String, String>> items = [
+    {
+      "name": "Macbook Pro 14 Inch (Grey)",
+      "awb": "JT1000927741",
+      "courier": "J&T Express",
+      "origin": "Jakarta, Indonesia, Dunia, Bima Sakti",
+      "destination": "Bogor, Jawa Barat, Indonesia, Dunia, Bima Sakti",
+      "shiper": "Apple Store",
+      "reciever": "Faris Afra M",
+      "desc": "Processed At Sorting Center [Depok, Jawa barat]"
+    },
+    {
+      "name": "Macbook Pro 14 Inch (Grey)",
+      "awb": "JT1000927741",
+      "courier": "J&T Express",
+      "origin": "Jakarta, Indonesia, Dunia, Bima Sakti",
+      "destination": "Bogor, Jawa Barat, Indonesia, Dunia, Bima Sakti",
+      "shiper": "Apple Store",
+      "reciever": "Faris Afra M",
+      "desc": "Processed At Sorting Center [Depok, Jawa barat]"
+    },
+    {
+      "name": "Macbook Pro 14 Inch (Grey)",
+      "awb": "JT1000927741",
+      "courier": "J&T Express",
+      "origin": "Jakarta, Indonesia, Dunia, Bima Sakti",
+      "destination": "Bogor, Jawa Barat, Indonesia, Dunia, Bima Sakti",
+      "shiper": "Apple Store",
+      "reciever": "Faris Afra M",
+      "desc": "Processed At Sorting Center [Depok, Jawa barat]"
     },
   ];
 
   return Center(
     child: ListView.builder(
-      itemCount: items.length,
+      itemCount: 2,
       itemBuilder: (_, index) {
         var item = items[index];
         return Card(
@@ -185,9 +343,13 @@ Widget DataRiwayatBuilder() {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('JT100092322', style: AppFonts.poppinsBold()),
+                        Text(item["name"]!, style: AppFonts.poppinsBold()),
                         Text(
-                          'Kurir: J&T',
+                          '${item["courier"]}',
+                          style: AppFonts.poppinsMedium(fontSize: 10),
+                        ),
+                        Text(
+                          'Tracking ID: ${item["awb"]}',
                           style: AppFonts.poppinsLight(fontSize: 10),
                         )
                       ],
@@ -201,77 +363,6 @@ Widget DataRiwayatBuilder() {
                     )
                   ],
                 ),
-                Divider(color: AppColors.BgPutih),
-
-                TimelineTile(
-                    alignment: TimelineAlign.start,
-                    isFirst: true,
-                    indicatorStyle:
-                        IndicatorStyle(color: AppColors.Hitam, width: 10),
-                    beforeLineStyle:
-                        LineStyle(color: AppColors.AbuMuda, thickness: 2),
-                    endChild: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AppSpacer.VerticalSpacerLarge,
-                          Text(
-                            'Pengirim:',
-                            style: AppFonts.poppinsLight(fontSize: 12),
-                          ),
-                          Row(
-                            children: [
-                              Text('Apple Store, ',
-                                  style: AppFonts.poppinsBold(fontSize: 14)),
-                              Text('Jakarta',
-                                  style: AppFonts.poppinsBold(fontSize: 14)),
-                            ],
-                          ),
-                          AppSpacer.VerticalSpacerLarge
-                        ],
-                      ),
-                    )),
-                
-                TimelineTile(
-                    alignment: TimelineAlign.start,
-                    isLast: true,
-                    indicatorStyle:
-                        IndicatorStyle(color: AppColors.AbuMuda, width: 10),
-                    beforeLineStyle:
-                        LineStyle(color: AppColors.AbuMuda, thickness: 2),
-                    endChild: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AppSpacer.VerticalSpacerLarge,
-                          Text(
-                            'Penerima:',
-                            style: AppFonts.poppinsLight(fontSize: 12),
-                          ),
-                          Row(
-                            children: [
-                              Text('Faris Afra, ',
-                                  style: AppFonts.poppinsBold(fontSize: 14)),
-                              Text('Bogor',
-                                  style: AppFonts.poppinsBold(fontSize: 14)),
-                            ],
-                          ),
-                          AppSpacer.VerticalSpacerLarge
-                        ],
-                      ),
-                    )),
-                
-                Divider(color: AppColors.BgPutih),
-
-                Row(
-                  children: [
-                    Text('Status: ',
-                        style: AppFonts.poppinsLight(fontSize: 12)),
-                    Text('Processed At Sorting Center [Depok]', style: AppFonts.poppinsBold(fontSize: 12)),
-                  ],
-                )
               ],
             ),
           )),

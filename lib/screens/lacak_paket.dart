@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
+import 'package:paket_tracker_app/screens/widgets/buttons/primary_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/card_button_error_widget.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/card_error_widget.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
@@ -23,7 +26,18 @@ class _LacakPaketState extends State<LacakPaket> {
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Column(
-              children: [LacakPaketWidget()],
+              children: [
+                LacakPaketWidget(),
+                AppSpacer.VerticalSpacerMedium,
+                Text(
+                  'Hasil Pencarian Anda:',
+                  style: AppFonts.poppinsRegular(),
+                ),
+                AppSpacer.VerticalSpacerMedium,
+                CardErrorWidget(
+                  TextTitle: 'Data Resi Tidak Ditemukan', 
+                  TextDesc: 'Pastikan Data yang Diinputkan Sudah Benar, dan Coba Lagi')
+              ],
             ),
           )),
         ));
@@ -74,29 +88,11 @@ Widget LacakPaketWidget() {
                       icons: AppIcons.IcTruckGrey,
                       hintText: 'Pilih Kurir',
                     ),
-                    AppSpacer.VerticalSpacerExtraSmall,
-                    MaterialButton(
-                      onPressed: () {},
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.BiruPrimary,
-                            borderRadius: BorderRadius.circular(8)
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  AppIcons.IcTrackWhite,
-                                  height: 20,
-                                ),
-                                AppSpacer.HorizontalSpacerSmall,
-                                Text('Lacak Paket Saya', style: AppFonts.poppinsRegular(color: AppColors.Putih),)
-                              ],
-                            ),
-                          )),
+                    AppSpacer.VerticalSpacerMedium,
+                    Center(
+                      child: PrimaryButton(Icons: AppIcons.IcTrackWhite, HintText: 'Lacak Paket Saya',),
                     )
+                    
                   ],
                 ),
               ))

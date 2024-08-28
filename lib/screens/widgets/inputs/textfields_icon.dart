@@ -8,6 +8,7 @@ class CustomTextfieldsIcon extends StatelessWidget {
   final String icons;
   final double sizeicons;
   final String hintText;
+  final TextEditingController controller;
 
 
   const CustomTextfieldsIcon({
@@ -16,6 +17,7 @@ class CustomTextfieldsIcon extends StatelessWidget {
     this.sizeicons = 24,
     required this.icons,
     required this.hintText,
+    required this.controller,
     super.key
     });
 
@@ -45,6 +47,7 @@ class CustomTextfieldsIcon extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: TextFormField(
+              controller: controller,
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 14, top: 0),
                   border: InputBorder.none,

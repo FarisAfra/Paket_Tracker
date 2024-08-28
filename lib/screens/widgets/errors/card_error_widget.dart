@@ -37,6 +37,7 @@ class CardErrorWidget extends StatelessWidget {
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     TextTitle,

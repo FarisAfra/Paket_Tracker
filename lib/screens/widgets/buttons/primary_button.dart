@@ -12,6 +12,8 @@ class PrimaryButton extends StatelessWidget {
   final String Icons;
   final String HintText;
   final double fontSize;
+  final Color bgColor;
+  final VoidCallback handler;
 
   const PrimaryButton({
     this.borderRadius = 8,
@@ -19,19 +21,21 @@ class PrimaryButton extends StatelessWidget {
     this.sizeIcons = 20,
     this.fontSize = 12,
     this.width = 270,
+    this.bgColor = AppColors.BiruPrimary,
     required this.Icons,
     required this.HintText,
+    required this.handler,
     super.key
     });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: handler,
       child: Container(
           width: width,
           decoration: BoxDecoration(
-              color: AppColors.BiruPrimary,
+              color: bgColor,
               borderRadius: BorderRadius.circular(borderRadius)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: PaddingY),

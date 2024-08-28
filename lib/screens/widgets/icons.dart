@@ -22,10 +22,13 @@ class AppIcons {
   static const String IcPackageBlue = 'assets/icons/ic_package_blue.png';
   static const String IcTrackBlue = 'assets/icons/ic_track_blue.png';
   static const String IcMoreBlue = 'assets/icons/ic_more_blue.png';
+  static const String IcSaveBlue = 'assets/icons/ic_save_blue.png';
+  static const String IcSaveOutlineBlue = 'assets/icons/ic_save_outline_blue.png';
   
   static const String IclogoutWhite = 'assets/icons/ic_logout_white.png';
   static const String IcScanWhite = 'assets/icons/ic_scan_white.png';
   static const String IcTrackWhite = 'assets/icons/ic_track_white.png';
+  static const String IcHomeWhite = 'assets/icons/ic_home_white.png';
 
   static const String IcPackageSearchGrey = 'assets/icons/ic_package_search_grey.png';
   static const String IcTruckGrey = 'assets/icons/ic_truck_grey.png';

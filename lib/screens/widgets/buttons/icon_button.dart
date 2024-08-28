@@ -5,6 +5,7 @@ class CustomIconButton extends StatelessWidget {
   final double size;
   final double padding;
   final double radius;
+  final double sizeIcons;
   final Color bgColor;
   final String icons;
   final VoidCallback handler; 
@@ -13,6 +14,7 @@ class CustomIconButton extends StatelessWidget {
     this.size = 36,
     this.radius = 10,
     this.padding = 6,
+    this.sizeIcons = 24,
     this.bgColor = AppColors.BiruSecondary,
     required this.icons,
     required this.handler,
@@ -30,7 +32,7 @@ class CustomIconButton extends StatelessWidget {
             height: size,
             child: Padding(
               padding: EdgeInsets.all(padding),
-              child: Image.asset(icons),
+              child: Image.asset(icons, height: sizeIcons, width: sizeIcons,),
             )),
       ),
     );

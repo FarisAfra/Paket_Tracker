@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:paket_tracker_app/screens/widgets/colors.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/comming_soon.dart';
 
 class RiwayatPencarian extends StatefulWidget {
   const RiwayatPencarian({super.key});
@@ -10,6 +12,9 @@ class RiwayatPencarian extends StatefulWidget {
 class _RiwayatPencarianState extends State<RiwayatPencarian> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: AppColors.BgPutih,
+      body: CommingSoonState()
+    );
   }
 }

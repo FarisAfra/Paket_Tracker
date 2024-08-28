@@ -7,6 +7,7 @@ import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_text_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/nav_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/card_button_error_widget.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
@@ -24,6 +25,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
+  String _currentResi = '';
 
   Widget _getCurrentWidget() {
     switch (_currentIndex) {
@@ -32,7 +34,7 @@ class _HomepageState extends State<Homepage> {
       case 1:
         return CekOngkir();
       case 2:
-        return LacakPaket();
+        return LacakPaket(resi: _currentResi,);
       case 3:
         return BookmarkPaket();
       case 4:
@@ -42,9 +44,12 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  void _onSectionSelected(int index) {
+  void _onSectionSelected(int index, [String resi = '']) {
     setState(() {
       _currentIndex = index;
+      if (resi.isNotEmpty) {
+        _currentResi = resi;
+      }
     });
   }
 
@@ -58,8 +63,13 @@ class _HomepageState extends State<Homepage> {
               leading: Row(
                 children: [
                   SizedBox(width: 20),
-                  Image.asset('assets/images/placeholder_avatar.png',
+                  GestureDetector(
+                    onTap: () {
+                      
+                    },
+                    child: Image.asset('assets/images/placeholder_avatar.png',
                       height: 36),
+                  ),
                 ],
               ),
               title: Center(
@@ -209,7 +219,7 @@ class _HomepageState extends State<Homepage> {
 }
 
 class KontenHomepage extends StatefulWidget {
-  final Function(int) onSectionSelected;
+  final Function(int, String) onSectionSelected;
 
   const KontenHomepage({required this.onSectionSelected});
 
@@ -218,6 +228,10 @@ class KontenHomepage extends StatefulWidget {
 }
 
 class _KontenHomepageState extends State<KontenHomepage> {
+  void _navigateToLacakPaket(String resi) {
+    widget.onSectionSelected(2, resi);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,20 +243,45 @@ class _KontenHomepageState extends State<KontenHomepage> {
             child: Column(
               children: [
                 LacakPaketWidget(
-                  handler: () { 
-                    widget.onSectionSelected(2);
-                   },),
+                   onTrackPackage: _navigateToLacakPaket,
+                   ),
                 AppSpacer.VerticalSpacerLarge,
-                FeatureApp(),
+                FeatureApp(
+                  handler1: () { 
+                    widget.onSectionSelected(2,'');
+                   }, 
+                  handler2: () { 
+                    widget.onSectionSelected(1,'');
+                   }, 
+                  handler3: () { 
+                    widget.onSectionSelected(3,'');
+                   }, 
+                  handler4: () { 
+                    widget.onSectionSelected(4,'');
+                   },),
                 TitleDetail(
                     textTitle: 'Pencarian Terakhir',
                     textDetail: 'Lihat Semua',
-                    handler: () {}),
+                    handler: () {
+                      widget.onSectionSelected(4,'');
+                    }),
+                CardButtonErrorWidget(
+                  TextTitle: 'Riwayat Tidak Ditemukan', 
+                  TextDesc: 'Silahkan Lakukan Pencarian Dahulu untuk Menambahkan Riwayat Anda.', 
+                  Icons: AppIcons.IcTrackWhite, 
+                  HintText: 'Lacak Paket Saya'),
                 DataRiwayatTerakhir(),
                 TitleDetail(
                     textTitle: 'Bookmark Anda',
                     textDetail: 'Lihat Semua',
-                    handler: () {}),
+                    handler: () {
+                      widget.onSectionSelected(3,'');
+                    }),
+                CardButtonErrorWidget(
+                  TextTitle: 'Tidak Ada Data Tersimpan', 
+                  TextDesc: 'Silahkan Lakukan Pencarian dan Simpan Data Paket Anda.', 
+                  Icons: AppIcons.IcTrackWhite, 
+                  HintText: 'Lacak Paket Saya'),
                 Container(
                   height: 170,
                   child: Expanded(child: DataBookmark()),
@@ -256,10 +295,11 @@ class _KontenHomepageState extends State<KontenHomepage> {
 }
 
 class LacakPaketWidget extends StatelessWidget {
-  final VoidCallback handler;
+  final Function(String) onTrackPackage;
+  final TextEditingController _resiController = TextEditingController();
 
-  const LacakPaketWidget({
-    required this.handler,
+   LacakPaketWidget({
+    required this.onTrackPackage,
     super.key
     });
 
@@ -291,12 +331,17 @@ class LacakPaketWidget extends StatelessWidget {
                     AppSpacer.VerticalSpacerSmall,
                     Row(
                       children: [
-                        CustomTextfieldsIcon(icons: AppIcons.IcPackageSearchGrey, hintText: 'Masukkan No. Resi',),
+                        CustomTextfieldsIcon(
+                          controller: _resiController,
+                          icons: AppIcons.IcPackageSearchGrey, 
+                          hintText: 'Masukkan No. Resi',),
                         AppSpacer.HorizontalSpacerSmall,
                         CustomIconButton(
                           icons: AppIcons.IcTrackWhite,
                           bgColor: AppColors.BiruPrimary,
-                          handler: handler,
+                          handler: () {
+                              onTrackPackage(_resiController.text);
+                            },
                         )
                       ],
                     ),
@@ -310,8 +355,23 @@ class LacakPaketWidget extends StatelessWidget {
   }
 }
 
-Widget FeatureApp() {
-  return ClipRRect(
+class FeatureApp extends StatelessWidget {
+  final VoidCallback handler1;
+  final VoidCallback handler2;
+  final VoidCallback handler3;
+  final VoidCallback handler4;
+
+  const FeatureApp({
+    required this.handler1,
+    required this.handler2,
+    required this.handler3,
+    required this.handler4,
+    super.key
+    });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
     borderRadius: BorderRadius.all(Radius.circular(10)),
     child: Container(
         color: AppColors.Putih,
@@ -328,26 +388,27 @@ Widget FeatureApp() {
               CustomIconTextButton(
                   icons: AppIcons.IcTrackBlue,
                   text: 'Lacak\nPaket',
-                  handler: () {}),
+                  handler: handler1),
               Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcOngkirBlue,
                   text: 'Cek\nOngkir',
-                  handler: () {}),
+                  handler: handler2),
               Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcBookmarkBlue,
                   text: 'Bookmark\nSaya',
-                  handler: () {}),
+                  handler: handler3),
               Spacer(),
               CustomIconTextButton(
                   icons: AppIcons.IcHistoryBlue,
                   text: 'Riwayat\nPencarian',
-                  handler: () {}),
+                  handler: handler4),
             ]),
           ),
         )),
   );
+  }
 }
 
 Widget DataRiwayatTerakhir() {

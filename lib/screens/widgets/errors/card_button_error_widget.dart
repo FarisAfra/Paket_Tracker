@@ -60,7 +60,8 @@ class CardButtonErrorWidget extends StatelessWidget {
                     fontSize: 10,
                     borderRadius: 5,
                     width: 180,
-                    PaddingY: 5,)
+                    PaddingY: 5, 
+                    handler: () {  },)
                 ],
               ),
             )

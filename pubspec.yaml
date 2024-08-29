@@ -41,6 +41,7 @@ dependencies:
   http: ^1.2.2
   card_loading: ^0.3.2
   flutter_dotenv: ^5.0.2
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

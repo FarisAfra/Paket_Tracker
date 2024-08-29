@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
-import 'package:paket_tracker_app/screens/widgets/buttons/icon_toggle_button.dart';
+import 'package:paket_tracker_app/screens/widgets/buttons/icon_toggle_save_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/primary_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/errors/card_error_widget.dart';
@@ -355,7 +355,21 @@ class _HasilPencarianState extends State<HasilPencarian> {
                                   ],
                                 ),
                                 Spacer(),
-                                IconToggleButton()
+                                IconToggleSaveButton(
+                                  handler: () {
+                                    
+                                  },
+                                  dataToSave: {
+                                    'awb': awb,
+                                    'courier': courier,
+                                    'shipper': shipper,
+                                    'receiver': receiver,
+                                    'origin': origin,
+                                    'destination': destination,
+                                    'status': status,
+                                    'history': history,
+                                  },
+                                )
                               ],
                             ),
                             Divider(color: AppColors.BgPutih),

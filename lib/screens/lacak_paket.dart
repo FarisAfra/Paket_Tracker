@@ -367,7 +367,6 @@ class _HasilPencarianState extends State<HasilPencarian> {
                                     'origin': origin,
                                     'destination': destination,
                                     'status': status,
-                                    'history': history,
                                   },
                                 )
                               ],

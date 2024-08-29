@@ -77,6 +77,9 @@ class _IconToggleSaveButtonState extends State<IconToggleSaveButton> {
   Future<void> _saveData(String name, Map<String, dynamic> data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    // Tambahkan nama yang dimasukkan ke dalam data yang akan disimpan
+    data['name'] = name;
+
     // Konversi data ke format JSON String
     String jsonData = jsonEncode(data);
 

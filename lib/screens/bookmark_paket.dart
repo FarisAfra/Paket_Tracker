@@ -1,7 +1,13 @@
 import 'dart:convert'; // Import untuk konversi JSON
 import 'package:flutter/material.dart';
+import 'package:paket_tracker_app/screens/detail_bookmark.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/errors/comming_soon.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/error_nodata_screen.dart';
+import 'package:paket_tracker_app/screens/widgets/fonts.dart';
+import 'package:paket_tracker_app/screens/widgets/icons.dart';
+import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
+import 'package:paket_tracker_app/screens/widgets/spacer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookmarkPaket extends StatefulWidget {
@@ -22,7 +28,8 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
 
   Future<void> _loadSavedData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Set<String> keys = prefs.getKeys(); // Dapatkan semua kunci data yang tersimpan
+    Set<String> keys =
+        prefs.getKeys(); // Dapatkan semua kunci data yang tersimpan
 
     List<Map<String, dynamic>> loadedData = [];
 
@@ -40,27 +47,252 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
     });
   }
 
+  void _showOptionsDialog(int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Edit'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _showEditDialog(index);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Hapus'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _deleteData(index);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditDialog(int index) {
+    TextEditingController nameController =
+        TextEditingController(text: savedDataList[index]['name']);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Nama'),
+          content: TextField(
+            controller: nameController,
+            decoration: InputDecoration(hintText: "Masukkan Nama Baru"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                String newName = nameController.text.trim();
+                if (newName.isNotEmpty) {
+                  _updateDataName(index, newName); // Memperbarui nama data
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text('Simpan'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Batal'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateDataName(int index, String newName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? key = prefs
+        .getKeys()
+        .elementAt(index); // Mendapatkan kunci berdasarkan urutan
+
+    if (key != null) {
+      savedDataList[index]['name'] = newName; // Memperbarui nama di list
+      String jsonData =
+          jsonEncode(savedDataList[index]); // Encode kembali ke JSON
+      await prefs.setString(
+          key, jsonData); // Simpan perubahan ke SharedPreferences
+      setState(() {}); // Perbarui tampilan
+    }
+  }
+
+  Future<void> _deleteData(int index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? key = prefs
+        .getKeys()
+        .elementAt(index); // Mendapatkan kunci berdasarkan urutan
+
+    if (key != null) {
+      await prefs.remove(key); // Hapus data dari SharedPreferences
+      setState(() {
+        savedDataList.removeAt(index); // Hapus data dari list
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Data berhasil dihapus')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.BgPutih,
-      body: savedDataList.isEmpty
-          ? Center(
-              child: CommingSoonState(), // Jika tidak ada data, tampilkan widget CommingSoonState
-            )
-          : ListView.builder(
-              itemCount: savedDataList.length,
-              itemBuilder: (context, index) {
-                final data = savedDataList[index];
-                return ListTile(
-                  title: Text(data['awb'] ?? 'Unknown AWB'),
-                  subtitle: Text('${data['courier'] ?? 'Unknown Courier'} - ${data['status'] ?? 'Unknown Status'}'),
-                  onTap: () {
-                    // Tambahkan tindakan saat item diklik, jika diperlukan
-                  },
-                );
-              },
-            ),
-    );
+        backgroundColor: AppColors.BgPutih,
+        body: savedDataList.isEmpty
+            ? Center(
+                child: ErrorNodataScreen(
+                    title: 'Anda Belum Memiliki Bookmark',
+                    desc:
+                        'Silahkan Lakukan Pencarian Dahulu dan\nSimpan Data Paket Anda',
+                    IconButton: AppIcons.IcTrackWhite,
+                    TextButton: 'Lacak Paket Saya',
+                    handler:
+                        () {
+                          
+                        }), // Jika tidak ada data, tampilkan widget CommingSoonState
+              )
+            : Column(
+                children: [
+                  AppSpacer.VerticalSpacerMedium,
+                  Text(
+                    'Kelola Data Paket Yang Anda Simpan',
+                    style: AppFonts.poppinsRegular(),
+                  ),
+                  AppSpacer.VerticalSpacerSmall,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: savedDataList.length,
+                      itemBuilder: (context, index) {
+                        final data = savedDataList[index];
+                        return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailBookmarkPage(data: data),
+                              ),
+                            );
+                              },
+                              child: Card(
+                                color: Colors.white,
+                                child: Center(
+                                    child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 24),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          getCourierLogo(data['courier']),
+                                          AppSpacer.HorizontalSpacerLarge,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  data['name'] ??
+                                                      'Unknown Name',
+                                                  style:
+                                                      AppFonts.poppinsBold()),
+                                              Text(
+                                                '${data['courier'] ?? 'Unknown Courier'}',
+                                                style: AppFonts.poppinsMedium(
+                                                    fontSize: 10),
+                                              ),
+                                              Text(
+                                                'No. Resi: ${data["awb"] ?? 'Unknown Resi'}',
+                                                style: AppFonts.poppinsLight(
+                                                    fontSize: 10),
+                                              )
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _showOptionsDialog(index);
+                                            },
+                                            child: Image.asset(
+                                              AppIcons.IcMoreBlack,
+                                              height: 20,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                              ),
+                            ));
+                      },
+                    ),
+                  )
+                ],
+              ));
+  }
+}
+
+Widget getCourierLogo(String? courier) {
+  switch (courier?.toLowerCase()) {
+    case 'anteraja':
+      return LogoAnteraja();
+    case 'dakota':
+      return LogoDakota();
+    case 'id':
+      return LogoID();
+    case 'indah':
+      return LogoIndah();
+    case 'jet':
+      return LogoJET();
+    case 'jne express':
+      return LogoJNE();
+    case 'jnt express':
+      return LogoJNT();
+    case 'jnt cargo':
+      return LogoJNTCargo();
+    case 'kgx':
+      return LogoKGX();
+    case 'lazada':
+      return LogoLazada();
+    case 'lion parcel':
+      return LogoLionParcel();
+    case 'ninja':
+      return LogoNinja();
+    case 'pcp':
+      return LogoPCP();
+    case 'pos indonesia':
+      return LogoPOS();
+    case 'rex':
+      return LogoREX();
+    case 'rpx':
+      return LogoRPX();
+    case 'sap':
+      return LogoSAP();
+    case 'sicepat':
+      return LogoSicepat();
+    case 'spx':
+      return LogoSPX();
+    case 'tiki':
+      return LogoTiki();
+    case 'tokopedia':
+      return LogoTokopedia();
+    case 'wahana':
+      return LogoWahana();
+    default:
+      return LogoPlaceholder(); // Logo default jika kurir tidak ditemukan
   }
 }

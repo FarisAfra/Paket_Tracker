@@ -11,6 +11,7 @@ import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
 import 'package:http/http.dart' as http;
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -90,8 +91,11 @@ class _DetailBookmarkPageState extends State<DetailBookmarkPage> {
         Navigator.pop(context); // Go back after deletion
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data berhasil dihapus')),
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Data Dihapus',
+        text: 'Data telah berhasil dihapus',
       );
     }
   }

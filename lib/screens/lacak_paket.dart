@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:paket_tracker_app/databases/db_helper.dart';
+import 'package:paket_tracker_app/models/tracking_data.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_toggle_save_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/primary_button.dart';
@@ -30,11 +32,18 @@ class _LacakPaketState extends State<LacakPaket> {
   String? _selectedCourier;
   String? _enteredResi;
 
-  void onTrackPackage(String resi, String courier) {
+  void onTrackPackage(String resi, String courier) async {
     setState(() {
       _enteredResi = resi;
       _selectedCourier = courier;
     });
+
+    // Create an instance of DBHelper
+    final dbHelper = DBHelper();
+    await dbHelper.addOrUpdateTrackingRecord(resi, courier);
+
+    // Optionally reload tracking records or perform other actions
+    // _loadTrackingRecords();
   }
 
   @override
@@ -248,7 +257,7 @@ class LacakPaketWidget extends StatelessWidget {
                       Center(
                         child: PrimaryButton(
                           Icons: AppIcons.IcTrackWhite,
-                          HintText: 'Lacak Paket Sayaa',
+                          HintText: 'Lacak Paket Saya',
                           handler: () {
                             onTrackPackage(
                               _resiController.text,
@@ -345,7 +354,7 @@ class _HasilPencarianState extends State<HasilPencarian> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                LogoJNT(),
+                                getCourierLogo('$courier'),
                                 AppSpacer.HorizontalSpacerLarge,
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -551,5 +560,56 @@ class _HasilPencarianState extends State<HasilPencarian> {
         },
       ),
     );
+  }
+}
+
+Widget getCourierLogo(String? courier) {
+  switch (courier?.toLowerCase()) {
+    case 'anteraja':
+      return LogoAnteraja();
+    case 'dakota':
+      return LogoDakota();
+    case 'id':
+      return LogoID();
+    case 'indah':
+      return LogoIndah();
+    case 'jet':
+      return LogoJET();
+    case 'jne express':
+      return LogoJNE();
+    case 'jnt express':
+      return LogoJNT();
+    case 'jnt cargo':
+      return LogoJNTCargo();
+    case 'kgx':
+      return LogoKGX();
+    case 'lazada':
+      return LogoLazada();
+    case 'lion parcel':
+      return LogoLionParcel();
+    case 'ninja':
+      return LogoNinja();
+    case 'pcp':
+      return LogoPCP();
+    case 'pos indonesia':
+      return LogoPOS();
+    case 'rex':
+      return LogoREX();
+    case 'rpx':
+      return LogoRPX();
+    case 'sap':
+      return LogoSAP();
+    case 'sicepat':
+      return LogoSicepat();
+    case 'spx':
+      return LogoSPX();
+    case 'tiki':
+      return LogoTiki();
+    case 'tokopedia':
+      return LogoTokopedia();
+    case 'wahana':
+      return LogoWahana();
+    default:
+      return LogoPlaceholder(); // Logo default jika kurir tidak ditemukan
   }
 }

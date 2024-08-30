@@ -6,6 +6,7 @@ import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
+import 'package:quickalert/quickalert.dart';
 
 class CommingSoonState extends StatelessWidget {
   const CommingSoonState({super.key});
@@ -33,11 +34,20 @@ class CommingSoonState extends StatelessWidget {
             HintText: 'Kembali Ke Homepage',
             bgColor: AppColors.AbuTua, 
             handler: () { 
-              Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CekOngkir()),
-                        );
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.confirm,
+                text: 'Do you want to logout',
+                confirmBtnText: 'Yes',
+                cancelBtnText: 'No',
+                confirmBtnColor: Colors.green,
+                onConfirmBtnTap: () {
+                  
+                },
+                onCancelBtnTap: () {
+                  
+                },
+              );
              },
           )
         ],

@@ -8,6 +8,7 @@ import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookmarkPaket extends StatefulWidget {
@@ -49,21 +50,26 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
 
   void _showOptionsDialog(int index) {
     showModalBottomSheet(
+      backgroundColor: AppColors.Putih,
       context: context,
       builder: (BuildContext context) {
         return Wrap(
+          alignment: WrapAlignment.center,
           children: [
+            Container(height: 16,),
+            Text('Pilih Aksi Yang Ingin Dilakukan', style: AppFonts.poppinsSemiBold(fontSize: 16),),
+            Divider(color: AppColors.BgPutih),
             ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Edit'),
+              leading: Image.asset(AppIcons.IcEditBlue, height: 24,),
+              title: Text('Edit Data', style: AppFonts.poppinsRegular(fontSize: 14),),
               onTap: () {
                 Navigator.of(context).pop();
                 _showEditDialog(index);
               },
             ),
             ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Hapus'),
+              leading: Image.asset(AppIcons.IcDeleteRed, height: 24,),
+              title: Text('Hapus Data', style: AppFonts.poppinsRegular(fontSize: 14)),
               onTap: () {
                 Navigator.of(context).pop();
                 _deleteData(index);
@@ -79,36 +85,44 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
     TextEditingController nameController =
         TextEditingController(text: savedDataList[index]['name']);
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit Nama'),
-          content: TextField(
-            controller: nameController,
-            decoration: InputDecoration(hintText: "Masukkan Nama Baru"),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                String newName = nameController.text.trim();
-                if (newName.isNotEmpty) {
-                  _updateDataName(index, newName); // Memperbarui nama data
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text('Simpan'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Batal'),
-            ),
-          ],
+    QuickAlert.show(
+    context: context,
+    type: QuickAlertType.custom,
+    barrierDismissible: true,
+    title: 'Edit Nama',
+    text: 'Masukkan Nama Baru',
+    widget: TextFormField(
+      controller: nameController,
+      decoration: InputDecoration(
+        hintText: 'Masukkan Nama Baru',
+        prefixIcon: Icon(Icons.save),
+      ),
+      textInputAction: TextInputAction.done,
+    ),
+    confirmBtnText: 'Simpan',
+    cancelBtnText: 'Batal',
+    showCancelBtn: true,
+    onConfirmBtnTap: () async {
+      String newName = nameController.text.trim();
+      if (newName.isNotEmpty) {
+        _updateDataName(index, newName); // Memperbarui nama data
+        Navigator.pop(context);
+        await Future.delayed(const Duration(milliseconds: 500)); // Tunggu sebentar sebelum menampilkan notifikasi sukses
+        await QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: "Nama berhasil diperbarui!",
         );
-      },
-    );
+      } else {
+        // Tampilkan pesan error jika nama kosong
+        await QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          text: 'Nama tidak boleh kosong',
+        );
+      }
+    },
+  );
   }
 
   Future<void> _updateDataName(int index, String newName) async {
@@ -139,8 +153,11 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
         savedDataList.removeAt(index); // Hapus data dari list
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data berhasil dihapus')),
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Data Dihapus',
+        text: 'Data telah berhasil dihapus',
       );
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:convert'; // Import untuk konversi JSON
 import 'package:flutter/material.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IconToggleSaveButton extends StatefulWidget {
@@ -37,42 +38,51 @@ class _IconToggleSaveButtonState extends State<IconToggleSaveButton> {
   }
 
   void _showSaveDialog() {
-    TextEditingController nameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Simpan Data'),
-          content: TextField(
-            controller: nameController,
-            decoration: InputDecoration(hintText: "Masukkan Nama Simpanan"),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                String saveName = nameController.text.trim();
-                if (saveName.isNotEmpty) {
-                  await _saveData(saveName, widget.dataToSave); // Simpan data
-                  setState(() {
-                    savedName = saveName; // Simpan nama data yang disimpan
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text('Simpan'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Batal'),
-            ),
-          ],
+  QuickAlert.show(
+    context: context,
+    type: QuickAlertType.custom,
+    barrierDismissible: true,
+    title: 'Simpan Data',
+    text: 'Masukkan Nama Simpanan',
+    widget: TextFormField(
+      controller: nameController,
+      decoration: InputDecoration(
+        hintText: 'Masukkan Nama Simpanan',
+        prefixIcon: Icon(Icons.save),
+      ),
+      textInputAction: TextInputAction.done,
+    ),
+    confirmBtnText: 'Simpan',
+    cancelBtnText: 'Batal',
+    showCancelBtn: true,
+    onConfirmBtnTap: () async {
+      String saveName = nameController.text.trim();
+      if (saveName.isNotEmpty) {
+        await _saveData(saveName, widget.dataToSave); // Simpan data
+        setState(() {
+          savedName = saveName; // Simpan nama data yang disimpan
+        });
+        Navigator.pop(context); // Menutup dialog setelah menyimpan
+        await Future.delayed(const Duration(milliseconds: 500)); // Jeda sebelum menampilkan notifikasi sukses
+        await QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: "Data berhasil disimpan!",
         );
-      },
-    );
-  }
+      } else {
+        // Tampilkan pesan error jika input kosong
+        await QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          text: 'Nama simpanan tidak boleh kosong',
+        );
+      }
+    },
+  );
+}
+
 
   Future<void> _saveData(String name, Map<String, dynamic> data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -86,9 +96,9 @@ class _IconToggleSaveButtonState extends State<IconToggleSaveButton> {
     // Simpan JSON String ke SharedPreferences
     await prefs.setString(name, jsonData);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Data berhasil disimpan dengan nama $name')),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(content: Text('Data berhasil disimpan dengan nama $name')),
+    // );
   }
 
   Future<void> _removeData(String name) async {
@@ -101,9 +111,16 @@ class _IconToggleSaveButtonState extends State<IconToggleSaveButton> {
         savedName = null; // Reset nama data yang disimpan
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data dengan nama $name berhasil dihapus')),
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Data Telah Dihapus',
+        text: 'Data dengan nama $name berhasil dihapus',
       );
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Data dengan nama $name berhasil dihapus')),
+      // );
     }
   }
 

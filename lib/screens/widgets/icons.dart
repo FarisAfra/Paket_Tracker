@@ -42,10 +42,12 @@ class AppIcons {
   static const String IcNavOngkirBlack = 'assets/icons/ic_nav_ongkir_black.png';
   static const String IcNavBookmarkBlack = 'assets/icons/ic_nav_bookmark_black.png';
   static const String IcNavHistoryBlack = 'assets/icons/ic_nav_history_black.png';
+  static const String IcNavProfileBlack = 'assets/icons/ic_nav_profil_black.png';
   static const String IcNavHomeBlue = 'assets/icons/ic_nav_home_blue.png';
   static const String IcNavOngkirBlue  = 'assets/icons/ic_nav_ongkir_blue.png';
   static const String IcNavBookmarkBlue  = 'assets/icons/ic_nav_bookmark_blue.png';
   static const String IcNavHistoryBlue  = 'assets/icons/ic_nav_history_blue.png';
+  static const String IcNavProfileBlue  = 'assets/icons/ic_nav_profil_blue.png';
   static const String IcNavTrackBtn  = 'assets/icons/ic_nav_track_btn.png';
 
   static const String IcDeleteRed = 'assets/icons/ic_delete_red.png';

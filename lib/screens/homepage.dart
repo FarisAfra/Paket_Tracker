@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:paket_tracker_app/screens/bookmark_paket.dart';
 import 'package:paket_tracker_app/screens/cek_ongkir.dart';
 import 'package:paket_tracker_app/screens/lacak_paket.dart';
+import 'package:paket_tracker_app/screens/notifikasi.dart';
 import 'package:paket_tracker_app/screens/riwayat_pencarian.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_text_button.dart';
@@ -86,7 +87,15 @@ class _HomepageState extends State<Homepage> {
               ),
               actions: [
                 CustomIconButton(
-                    icons: AppIcons.IcNotificationBlue, handler: () {}),
+                    icons: AppIcons.IcNotificationBlue, 
+                    handler: () {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Notifikasi(),
+                              ),
+                            );
+                    }),
                 SizedBox(width: 20)
               ],
             )
@@ -127,7 +136,15 @@ class _HomepageState extends State<Homepage> {
               ),
               actions: [
                 CustomIconButton(
-                    icons: AppIcons.IcNotificationBlue, handler: () {}),
+                    icons: AppIcons.IcNotificationBlue, 
+                    handler: () {
+                       Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Notifikasi(),
+                              ),
+                            );
+                    }),
                 SizedBox(width: 20)
               ],
             ),

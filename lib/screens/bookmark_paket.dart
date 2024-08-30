@@ -160,7 +160,7 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
                     handler:
                         () {
                           
-                        }), // Jika tidak ada data, tampilkan widget CommingSoonState
+                        }),
               )
             : Column(
                 children: [
@@ -171,7 +171,9 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
                   ),
                   AppSpacer.VerticalSpacerSmall,
                   Expanded(
-                    child: ListView.builder(
+                    child: RefreshIndicator(
+                      onRefresh: _loadSavedData,
+                      child: ListView.builder(
                       itemCount: savedDataList.length,
                       itemBuilder: (context, index) {
                         final data = savedDataList[index];
@@ -182,7 +184,7 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
                                 Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DetailBookmarkPage(data: data),
+                                builder: (context) => DetailBookmarkPage(data: data, index: index,),
                               ),
                             );
                               },
@@ -240,6 +242,7 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
                             ));
                       },
                     ),
+                    )
                   )
                 ],
               ));

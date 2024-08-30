@@ -323,6 +323,10 @@ class _HasilPencarianState extends State<HasilPencarian> {
             final origin = data['detail']['origin'];
             final destination = data['detail']['destination'];
             final status = data['summary']['status'];
+            final service = data['summary']['service'];
+            final weight = data['summary']['weight'];
+            final amount = data['summary']['amount'];
+            final date = data['summary']['date'];
             final history = data['history'];
 
             return Center(
@@ -367,6 +371,10 @@ class _HasilPencarianState extends State<HasilPencarian> {
                                     'origin': origin,
                                     'destination': destination,
                                     'status': status,
+                                    'service': service,
+                                    'weight': weight,
+                                    'amount': amount,
+                                    'date': date,
                                   },
                                 )
                               ],

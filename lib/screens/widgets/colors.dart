@@ -8,4 +8,5 @@ class AppColors {
   static const Color BgPutih = Color(0xFFF5F5F5);
   static const Color Hitam = Color(0xFF000000);
   static const Color Putih = Color(0xFFFFFFFF);
+  static const Color Merah = Color(0xFFF24E1E);
 }

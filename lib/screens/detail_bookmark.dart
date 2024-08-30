@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/outline_button.dart';
@@ -143,8 +144,30 @@ class _DetailBookmarkPageState extends State<DetailBookmarkPage> {
                 style: AppFonts.poppinsBold(fontSize: 16)),
             Text(widget.data['courier'] ?? 'Unknown courier',
                 style: AppFonts.poppinsMedium(fontSize: 12)),
-            Text('No. Resi: ${widget.data['awb']}' ?? 'Unknown Awb',
-                style: AppFonts.poppinsLight(fontSize: 10)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('No. Resi: ${widget.data['awb']}' ?? 'Unknown Awb',
+                    style: AppFonts.poppinsLight(fontSize: 10)),
+                AppSpacer.HorizontalSpacerExtraSmall,
+                GestureDetector(
+                  child: Icon(Icons.copy, size: 12),
+                  onTap: () {
+                    Clipboard.setData(
+                      ClipboardData(
+                        text: widget.data['awb'] ?? '',
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Resi disalin ke clipboard'),
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+            
             AppSpacer.VerticalSpacerMedium,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

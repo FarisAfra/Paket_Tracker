@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:paket_tracker_app/databases/db_helper.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
@@ -108,10 +109,32 @@ class _RiwayatPencarianState extends State<RiwayatPencarian> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          record['resi'] ?? 'Unknown Resi',
-                                          style: AppFonts.poppinsBold(),
-                                        ),
+                                        Row(
+                                        children: [
+                                          Text(
+                                            record['resi'] ?? 'Unknown Resi',
+                                            style: AppFonts.poppinsBold(),
+                                          ),
+                                          AppSpacer.HorizontalSpacerExtraSmall,
+                                          GestureDetector(
+                                            child: Icon(Icons.copy, size: 12),
+                                            onTap: () {
+                                              Clipboard.setData(
+                                                ClipboardData(
+                                                  text: record['resi'] ?? '',
+                                                ),
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                      'Resi disalin ke clipboard'),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
                                         Text(
                                           '${record['courier'] ?? 'Unknown Courier'}',
                                           style: AppFonts.poppinsMedium(

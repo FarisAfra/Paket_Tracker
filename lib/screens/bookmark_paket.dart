@@ -229,7 +229,7 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
                                                   style:
                                                       AppFonts.poppinsBold()),
                                               Text(
-                                                '${data['courier'] ?? 'Unknown Courier'}',
+                                                '${data['courier2'] ?? 'Unknown Courier'}',
                                                 style: AppFonts.poppinsMedium(
                                                     fontSize: 10),
                                               ),

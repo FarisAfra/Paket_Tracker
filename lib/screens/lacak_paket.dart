@@ -354,7 +354,7 @@ class _HasilPencarianState extends State<HasilPencarian> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                getCourierLogo('$courier'),
+                                getCourierLogo(widget.courier),
                                 AppSpacer.HorizontalSpacerLarge,
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,7 +374,8 @@ class _HasilPencarianState extends State<HasilPencarian> {
                                   },
                                   dataToSave: {
                                     'awb': awb,
-                                    'courier': courier,
+                                    'courier': widget.courier,
+                                    'courier2': courier,
                                     'shipper': shipper,
                                     'receiver': receiver,
                                     'origin': origin,

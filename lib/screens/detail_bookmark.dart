@@ -142,7 +142,7 @@ class _DetailBookmarkPageState extends State<DetailBookmarkPage> {
             AppSpacer.VerticalSpacerMedium,
             Text(widget.data['name'] ?? 'Unknown Name',
                 style: AppFonts.poppinsBold(fontSize: 16)),
-            Text(widget.data['courier'] ?? 'Unknown courier',
+            Text(widget.data['courier2'] ?? 'Unknown courier',
                 style: AppFonts.poppinsMedium(fontSize: 12)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,13 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:paket_tracker_app/databases/db_helper.dart';
 import 'package:paket_tracker_app/screens/bookmark_paket.dart';
 import 'package:paket_tracker_app/screens/cek_ongkir.dart';
+import 'package:paket_tracker_app/screens/detail_bookmark.dart';
 import 'package:paket_tracker_app/screens/lacak_paket.dart';
 import 'package:paket_tracker_app/screens/notifikasi.dart';
 import 'package:paket_tracker_app/screens/riwayat_pencarian.dart';
@@ -9,12 +16,15 @@ import 'package:paket_tracker_app/screens/widgets/buttons/icon_text_button.dart'
 import 'package:paket_tracker_app/screens/widgets/buttons/nav_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
 import 'package:paket_tracker_app/screens/widgets/errors/card_button_error_widget.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/error_nodata_screen.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
 import 'package:paket_tracker_app/screens/widgets/texts/title_detail.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class Homepage extends StatefulWidget {
@@ -35,7 +45,9 @@ class _HomepageState extends State<Homepage> {
       case 1:
         return CekOngkir();
       case 2:
-        return LacakPaket(resi: _currentResi,);
+        return LacakPaket(
+          resi: _currentResi,
+        );
       case 3:
         return BookmarkPaket();
       case 4:
@@ -65,11 +77,9 @@ class _HomepageState extends State<Homepage> {
                 children: [
                   SizedBox(width: 20),
                   GestureDetector(
-                    onTap: () {
-                      
-                    },
+                    onTap: () {},
                     child: Image.asset('assets/images/placeholder_avatar.png',
-                      height: 36),
+                        height: 36),
                   ),
                 ],
               ),
@@ -87,14 +97,14 @@ class _HomepageState extends State<Homepage> {
               ),
               actions: [
                 CustomIconButton(
-                    icons: AppIcons.IcNotificationBlue, 
+                    icons: AppIcons.IcNotificationBlue,
                     handler: () {
                       Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Notifikasi(),
-                              ),
-                            );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Notifikasi(),
+                        ),
+                      );
                     }),
                 SizedBox(width: 20)
               ],
@@ -136,14 +146,14 @@ class _HomepageState extends State<Homepage> {
               ),
               actions: [
                 CustomIconButton(
-                    icons: AppIcons.IcNotificationBlue, 
+                    icons: AppIcons.IcNotificationBlue,
                     handler: () {
-                       Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Notifikasi(),
-                              ),
-                            );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Notifikasi(),
+                        ),
+                      );
                     }),
                 SizedBox(width: 20)
               ],
@@ -260,48 +270,42 @@ class _KontenHomepageState extends State<KontenHomepage> {
             child: Column(
               children: [
                 LacakPaketWidget(
-                   onTrackPackage: _navigateToLacakPaket,
-                   ),
+                  onTrackPackage: _navigateToLacakPaket,
+                ),
                 AppSpacer.VerticalSpacerLarge,
                 FeatureApp(
-                  handler1: () { 
-                    widget.onSectionSelected(2,'');
-                   }, 
-                  handler2: () { 
-                    widget.onSectionSelected(1,'');
-                   }, 
-                  handler3: () { 
-                    widget.onSectionSelected(3,'');
-                   }, 
-                  handler4: () { 
-                    widget.onSectionSelected(4,'');
-                   },),
-                TitleDetail(
-                    textTitle: 'Pencarian Terakhir',
-                    textDetail: 'Lihat Semua',
-                    handler: () {
-                      widget.onSectionSelected(4,'');
-                    }),
-                CardButtonErrorWidget(
-                  TextTitle: 'Riwayat Tidak Ditemukan', 
-                  TextDesc: 'Silahkan Lakukan Pencarian Dahulu untuk Menambahkan Riwayat Anda.', 
-                  Icons: AppIcons.IcTrackWhite, 
-                  HintText: 'Lacak Paket Saya'),
-                DataRiwayatTerakhir(),
+                  handler1: () {
+                    widget.onSectionSelected(2, '');
+                  },
+                  handler2: () {
+                    widget.onSectionSelected(1, '');
+                  },
+                  handler3: () {
+                    widget.onSectionSelected(3, '');
+                  },
+                  handler4: () {
+                    widget.onSectionSelected(4, '');
+                  },
+                ),
                 TitleDetail(
                     textTitle: 'Bookmark Anda',
                     textDetail: 'Lihat Semua',
                     handler: () {
-                      widget.onSectionSelected(3,'');
+                      widget.onSectionSelected(3, '');
                     }),
-                CardButtonErrorWidget(
-                  TextTitle: 'Tidak Ada Data Tersimpan', 
-                  TextDesc: 'Silahkan Lakukan Pencarian dan Simpan Data Paket Anda.', 
-                  Icons: AppIcons.IcTrackWhite, 
-                  HintText: 'Lacak Paket Saya'),
                 Container(
-                  height: 170,
-                  child: Expanded(child: DataBookmark()),
+                  height: 240,
+                  child: Expanded(child: BookmarkHomepage()),
+                ),
+                TitleDetail(
+                    textTitle: 'Pencarian Terakhir',
+                    textDetail: 'Lihat Semua',
+                    handler: () {
+                      widget.onSectionSelected(4, '');
+                    }),
+                Container(
+                  height: 180,
+                  child: Expanded(child: HistoryHomepage()),
                 ),
                 SizedBox(height: 64)
               ],
@@ -315,60 +319,357 @@ class LacakPaketWidget extends StatelessWidget {
   final Function(String) onTrackPackage;
   final TextEditingController _resiController = TextEditingController();
 
-   LacakPaketWidget({
-    required this.onTrackPackage,
-    super.key
-    });
+  LacakPaketWidget({required this.onTrackPackage, super.key});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
-    child: Container(
-      color: AppColors.BiruSecondary,
-      height: 132,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Image.asset(AppIcons.IcLocationTransparent),
-          ),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 22),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Lacak Paket Anda',
-                        style: AppFonts.poppinsRegular(fontSize: 18)),
-                    Text('Silahkan Masukkan No. Resi Paket Anda',
-                        style: AppFonts.poppinsExtraLight(fontSize: 12)),
-                    AppSpacer.VerticalSpacerSmall,
-                    Row(
-                      children: [
-                        CustomTextfieldsIcon(
-                          controller: _resiController,
-                          icons: AppIcons.IcPackageSearchGrey, 
-                          hintText: 'Masukkan No. Resi',),
-                        AppSpacer.HorizontalSpacerSmall,
-                        CustomIconButton(
-                          icons: AppIcons.IcTrackWhite,
-                          bgColor: AppColors.BiruPrimary,
-                          handler: () {
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      child: Container(
+        color: AppColors.BiruSecondary,
+        height: 132,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: Image.asset(AppIcons.IcLocationTransparent),
+            ),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Lacak Paket Anda',
+                          style: AppFonts.poppinsRegular(fontSize: 18)),
+                      Text('Silahkan Masukkan No. Resi Paket Anda',
+                          style: AppFonts.poppinsExtraLight(fontSize: 12)),
+                      AppSpacer.VerticalSpacerSmall,
+                      Row(
+                        children: [
+                          CustomTextfieldsIcon(
+                            controller: _resiController,
+                            icons: AppIcons.IcPackageSearchGrey,
+                            hintText: 'Masukkan No. Resi',
+                          ),
+                          AppSpacer.HorizontalSpacerSmall,
+                          CustomIconButton(
+                            icons: AppIcons.IcTrackWhite,
+                            bgColor: AppColors.BiruPrimary,
+                            handler: () {
                               onTrackPackage(_resiController.text);
                             },
-                        )
-                      ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HistoryHomepage extends StatefulWidget {
+  const HistoryHomepage({super.key});
+
+  @override
+  State<HistoryHomepage> createState() => _HistoryHomepageState();
+}
+
+class _HistoryHomepageState extends State<HistoryHomepage> {
+  List<Map<String, dynamic>> _trackingRecords = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTrackingRecords();
+  }
+
+  Future<void> _loadTrackingRecords() async {
+    final dbHelper = DBHelper();
+    final records = await dbHelper.getTrackingRecords();
+
+    print(records); // Check the content and structure
+
+    // Ensure that records are modifiable
+    if (records.isNotEmpty) {
+      setState(() {
+        _trackingRecords = List.from(records); // Copy to ensure modifiability
+      });
+    }
+  }
+
+  Future<void> _loadSavedData() async {
+    await _loadTrackingRecords(); // Reload the data
+  }
+
+  Future<void> _deleteRecord(int index) async {
+    final dbHelper = DBHelper();
+    final record = _trackingRecords[index];
+
+    await dbHelper
+        .deleteTrackingRecord(record['id']); // Call your delete method
+    _loadTrackingRecords(); // Reload records after deletion
+  }
+
+  void _showOptionsDialog(int index) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      title: 'Warning!',
+      text: 'Apakah Anda yakin ingin menghapus riwayat ini?',
+      confirmBtnText: 'Hapus',
+      cancelBtnText: 'Batal',
+      confirmBtnColor: Colors.red,
+      onConfirmBtnTap: () async {
+        Navigator.of(context).pop(); // Close the alert
+        await _deleteRecord(index); // Delete the record
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop(); // Close the alert
+      },
+    );
+  }
+
+  String _formatTimestamp(String? timestamp) {
+    if (timestamp == null) return 'Unknown Time';
+
+    // Parsing string timestamp to DateTime object
+    DateTime parsedDate = DateTime.parse(timestamp);
+
+    // Formatting DateTime to desired format
+    String formattedDate = DateFormat('dd MMM yyyy, HH:mm:ss').format(parsedDate);
+
+    return formattedDate;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.BgPutih,
+      body: Column(
+        children: [
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _loadSavedData,
+              child: ListView.builder(
+                itemCount:min(_trackingRecords.length, 2) ,
+                itemBuilder: (context, index) {
+                  final record = _trackingRecords[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Card(
+                        color: Colors.white,
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 24),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    getCourierLogo(record['courier']),
+                                    AppSpacer.HorizontalSpacerLarge,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              record['resi'] ?? 'Unknown Resi',
+                                              style: AppFonts.poppinsBold(),
+                                            ),
+                                            AppSpacer
+                                                .HorizontalSpacerExtraSmall,
+                                            GestureDetector(
+                                              child: Icon(Icons.copy, size: 12),
+                                              onTap: () {
+                                                Clipboard.setData(
+                                                  ClipboardData(
+                                                    text: record['resi'] ?? '',
+                                                  ),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'Resi disalin ke clipboard'),
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                        getCourierName(record['courier']),
+                                        Text(
+                                          'Pada: ${_formatTimestamp(record["timestamp"])}',
+                                          style: AppFonts.poppinsLight(
+                                              fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _showOptionsDialog(index);
+                                      },
+                                      child: Image.asset(
+                                        AppIcons.IcDeleteRed,
+                                        height: 20,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-              ))
+                  );
+                },
+              ),
+            ),
+          ),
         ],
       ),
-    ),
-  );
+    );
+  }
+}
+
+class BookmarkHomepage extends StatefulWidget {
+  const BookmarkHomepage({super.key});
+
+  @override
+  State<BookmarkHomepage> createState() => _BookmarkHomepageState();
+}
+
+class _BookmarkHomepageState extends State<BookmarkHomepage> {
+  List<Map<String, dynamic>> savedDataList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedData(); // Muat data saat widget diinisialisasi
+  }
+
+  Future<void> _loadSavedData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Set<String> keys =
+        prefs.getKeys(); // Dapatkan semua kunci data yang tersimpan
+
+    List<Map<String, dynamic>> loadedData = [];
+
+    for (String key in keys) {
+      String? jsonString = prefs.getString(key);
+      if (jsonString != null) {
+        // Decode JSON String ke Map
+        Map<String, dynamic> data = jsonDecode(jsonString);
+        loadedData.add(data);
+      }
+    }
+
+    setState(() {
+      savedDataList = loadedData; // Perbarui state dengan data yang diambil
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return savedDataList.isEmpty
+        ? Center(
+            child: CardButtonErrorWidget(
+                TextTitle: 'Tidak Ada Data Tersimpan',
+                TextDesc:
+                    'Silahkan Lakukan Pencarian dan Simpan Data Paket Anda.',
+                Icons: AppIcons.IcTrackWhite,
+                HintText: 'Lacak Paket Saya'),
+          )
+        : Column(
+            children: [
+              Expanded(
+                  child: RefreshIndicator(
+                onRefresh: _loadSavedData,
+                child: ListView.builder(
+                  itemCount: min(savedDataList.length, 3),
+                  itemBuilder: (context, index) {
+                    final data = savedDataList[index];
+                    return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailBookmarkPage(
+                                  data: data,
+                                  index: index,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Center(
+                                child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 24),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      getCourierLogo(data['courier']),
+                                      AppSpacer.HorizontalSpacerLarge,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(data['name'] ?? 'Unknown Name',
+                                              style: AppFonts.poppinsBold()),
+                                          Text(
+                                            '${data['courier2'] ?? 'Unknown Courier'}',
+                                            style: AppFonts.poppinsMedium(
+                                                fontSize: 10),
+                                          ),
+                                          Text(
+                                            'No. Resi: ${data["awb"] ?? 'Unknown Resi'}',
+                                            style: AppFonts.poppinsLight(
+                                                fontSize: 10),
+                                          )
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      GestureDetector(
+                                        // onTap: () {
+                                        //   _showOptionsDialog(index);
+                                        // },
+                                        child: Image.asset(
+                                          AppIcons.IcMoreBlack,
+                                          height: 20,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )),
+                          ),
+                        ));
+                  },
+                ),
+              ))
+            ],
+          );
   }
 }
 
@@ -378,53 +679,53 @@ class FeatureApp extends StatelessWidget {
   final VoidCallback handler3;
   final VoidCallback handler4;
 
-  const FeatureApp({
-    required this.handler1,
-    required this.handler2,
-    required this.handler3,
-    required this.handler4,
-    super.key
-    });
+  const FeatureApp(
+      {required this.handler1,
+      required this.handler2,
+      required this.handler3,
+      required this.handler4,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
-    child: Container(
-        color: AppColors.Putih,
-        height: 132,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Center(
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Image.asset(
-                'assets/images/logo_app_2_blue.png',
-                width: 45,
-              ),
-              Spacer(),
-              CustomIconTextButton(
-                  icons: AppIcons.IcTrackBlue,
-                  text: 'Lacak\nPaket',
-                  handler: handler1),
-              Spacer(),
-              CustomIconTextButton(
-                  icons: AppIcons.IcOngkirBlue,
-                  text: 'Cek\nOngkir',
-                  handler: handler2),
-              Spacer(),
-              CustomIconTextButton(
-                  icons: AppIcons.IcBookmarkBlue,
-                  text: 'Bookmark\nSaya',
-                  handler: handler3),
-              Spacer(),
-              CustomIconTextButton(
-                  icons: AppIcons.IcHistoryBlue,
-                  text: 'Riwayat\nPencarian',
-                  handler: handler4),
-            ]),
-          ),
-        )),
-  );
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      child: Container(
+          color: AppColors.Putih,
+          height: 132,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: Center(
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Image.asset(
+                  'assets/images/logo_app_2_blue.png',
+                  width: 45,
+                ),
+                Spacer(),
+                CustomIconTextButton(
+                    icons: AppIcons.IcTrackBlue,
+                    text: 'Lacak\nPaket',
+                    handler: handler1),
+                Spacer(),
+                CustomIconTextButton(
+                    icons: AppIcons.IcOngkirBlue,
+                    text: 'Cek\nOngkir',
+                    handler: handler2),
+                Spacer(),
+                CustomIconTextButton(
+                    icons: AppIcons.IcBookmarkBlue,
+                    text: 'Bookmark\nSaya',
+                    handler: handler3),
+                Spacer(),
+                CustomIconTextButton(
+                    icons: AppIcons.IcHistoryBlue,
+                    text: 'Riwayat\nPencarian',
+                    handler: handler4),
+              ]),
+            ),
+          )),
+    );
   }
 }
 
@@ -636,4 +937,55 @@ Widget DataBookmark() {
       },
     ),
   );
+}
+
+Widget getCourierLogo(String? courier) {
+  switch (courier?.toLowerCase()) {
+    case 'anteraja':
+      return LogoAnteraja();
+    case 'dakota':
+      return LogoDakota();
+    case 'id':
+      return LogoID();
+    case 'indah':
+      return LogoIndah();
+    case 'jet':
+      return LogoJET();
+    case 'jne express':
+      return LogoJNE();
+    case 'jnt express':
+      return LogoJNT();
+    case 'jnt cargo':
+      return LogoJNTCargo();
+    case 'kgx':
+      return LogoKGX();
+    case 'lazada':
+      return LogoLazada();
+    case 'lion parcel':
+      return LogoLionParcel();
+    case 'ninja':
+      return LogoNinja();
+    case 'pcp':
+      return LogoPCP();
+    case 'pos indonesia':
+      return LogoPOS();
+    case 'rex':
+      return LogoREX();
+    case 'rpx':
+      return LogoRPX();
+    case 'sap':
+      return LogoSAP();
+    case 'sicepat':
+      return LogoSicepat();
+    case 'spx':
+      return LogoSPX();
+    case 'tiki':
+      return LogoTiki();
+    case 'tokopedia':
+      return LogoTokopedia();
+    case 'wahana':
+      return LogoWahana();
+    default:
+      return LogoPlaceholder(); // Logo default jika kurir tidak ditemukan
+  }
 }

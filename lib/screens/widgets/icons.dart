@@ -24,6 +24,7 @@ class AppIcons {
   static const String IcMoreBlue = 'assets/icons/ic_more_blue.png';
   static const String IcSaveBlue = 'assets/icons/ic_save_blue.png';
   static const String IcSaveOutlineBlue = 'assets/icons/ic_save_outline_blue.png';
+  static const String IcSaveNameBlue = 'assets/icons/ic_save_name.png';
   static const String IcShareBlue = 'assets/icons/ic_share_blue.png';
   
   static const String IclogoutWhite = 'assets/icons/ic_logout_white.png';
@@ -34,6 +35,8 @@ class AppIcons {
 
   static const String IcPackageSearchGrey = 'assets/icons/ic_package_search_grey.png';
   static const String IcTruckGrey = 'assets/icons/ic_truck_grey.png';
+  static const String IcProfilGrey = 'assets/icons/ic_profile_grey.png';
+  static const String IcMapsGrey = 'assets/icons/ic_maps_grey.png';
 
   static const String IcLocationTransparent = 'assets/icons/ic_location_transparent.png';
   static const String IcLocationBigTransparent = 'assets/icons/ic_location_big_transparent.png';

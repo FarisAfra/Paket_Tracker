@@ -30,6 +30,7 @@ class ErrorNodataScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 36),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset('assets/images/error_state.png', width: 175,),
           AppSpacer.VerticalSpacerSmall,

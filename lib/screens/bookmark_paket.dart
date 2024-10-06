@@ -44,7 +44,7 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
     }
 
     setState(() {
-      savedDataList = loadedData; // Perbarui state dengan data yang diambil
+      savedDataList = loadedData.reversed.toList(); // Perbarui state dengan data yang diambil
     });
   }
 
@@ -278,9 +278,9 @@ Widget getCourierLogo(String? courier) {
       return LogoIndah();
     case 'jet':
       return LogoJET();
-    case 'jne express':
+    case 'jne':
       return LogoJNE();
-    case 'jnt express':
+    case 'jnt':
       return LogoJNT();
     case 'jnt cargo':
       return LogoJNTCargo();

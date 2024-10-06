@@ -34,9 +34,8 @@ class CardErrorWidget extends StatelessWidget {
               height: SizeIcons,
             ),
             AppSpacer.HorizontalSpacerMedium,
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -49,7 +48,6 @@ class CardErrorWidget extends StatelessWidget {
                   )
                 ],
               ),
-            )
           ],
         ),
       ),

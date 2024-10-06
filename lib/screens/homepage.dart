@@ -37,6 +37,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
   String _currentResi = '';
+  Future<Map<String, String>>? _userData;
 
   Widget _getCurrentWidget() {
     switch (_currentIndex) {
@@ -67,21 +68,47 @@ class _HomepageState extends State<Homepage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _userData = getUserData(); // Panggil fungsi untuk mengambil data pengguna
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.BgPutih,
       appBar: _currentIndex == 0
           ? AppBar(
               backgroundColor: AppColors.Putih,
-              leading: Row(
-                children: [
-                  SizedBox(width: 20),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Image.asset('assets/images/placeholder_avatar.png',
-                        height: 36),
-                  ),
-                ],
+              leading: FutureBuilder<Map<String, String>>(
+                future: _userData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                          CircularProgressIndicator(), // Tampilkan loading indicator sementara
+                    );
+                  } else if (snapshot.hasError) {
+                    return Icon(
+                        Icons.error); // Tampilkan error icon jika ada kesalahan
+                  } else {
+                    String imagePath = snapshot.data?['imagePath'] ??
+                        'assets/images/placeholder_avatar.png';
+
+                    return GestureDetector(
+                        onTap: () {
+                          // Aksi ketika gambar diklik
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(imagePath, height: 36),
+                          ),
+                        ));
+                  }
+                },
               ),
               title: Center(
                 child: Column(
@@ -90,23 +117,40 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     Text('Halo, Selamat Datang',
                         style: AppFonts.poppinsLight()),
-                    Text('Lorem Ipsum',
-                        style: AppFonts.poppinsExtraBold(fontSize: 16)),
+                    FutureBuilder<Map<String, String>>(
+                      future: _userData,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text('Loading...',
+                              style: AppFonts.poppinsExtraBold(fontSize: 16));
+                        } else if (snapshot.hasError) {
+                          return Text('Error',
+                              style: AppFonts.poppinsExtraBold(fontSize: 16));
+                        } else {
+                          return Text(
+                            snapshot.data?['name'] ?? 'Nama Tidak Ditemukan',
+                            style: AppFonts.poppinsExtraBold(fontSize: 16),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
               actions: [
                 CustomIconButton(
-                    icons: AppIcons.IcNotificationBlue,
-                    handler: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Notifikasi(),
-                        ),
-                      );
-                    }),
-                SizedBox(width: 20)
+                  icons: AppIcons.IcNotificationBlue,
+                  handler: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Notifikasi(),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(width: 20),
               ],
             )
           : AppBar(
@@ -288,16 +332,6 @@ class _KontenHomepageState extends State<KontenHomepage> {
                   },
                 ),
                 TitleDetail(
-                    textTitle: 'Bookmark Anda',
-                    textDetail: 'Lihat Semua',
-                    handler: () {
-                      widget.onSectionSelected(3, '');
-                    }),
-                Container(
-                  height: 240,
-                  child: Expanded(child: BookmarkHomepage()),
-                ),
-                TitleDetail(
                     textTitle: 'Pencarian Terakhir',
                     textDetail: 'Lihat Semua',
                     handler: () {
@@ -306,6 +340,16 @@ class _KontenHomepageState extends State<KontenHomepage> {
                 Container(
                   height: 180,
                   child: Expanded(child: HistoryHomepage()),
+                ),
+                TitleDetail(
+                    textTitle: 'Bookmark Anda',
+                    textDetail: 'Lihat Semua',
+                    handler: () {
+                      widget.onSectionSelected(3, '');
+                    }),
+                Container(
+                  height: 240,
+                  child: Expanded(child: BookmarkHomepage()),
                 ),
                 SizedBox(height: 64)
               ],
@@ -397,11 +441,9 @@ class _HistoryHomepageState extends State<HistoryHomepage> {
     print(records); // Check the content and structure
 
     // Ensure that records are modifiable
-    if (records.isNotEmpty) {
-      setState(() {
-        _trackingRecords = List.from(records); // Copy to ensure modifiability
-      });
-    }
+    setState(() {
+      _trackingRecords = List.from(records); // Copy to ensure modifiability
+    });
   }
 
   Future<void> _loadSavedData() async {
@@ -443,7 +485,8 @@ class _HistoryHomepageState extends State<HistoryHomepage> {
     DateTime parsedDate = DateTime.parse(timestamp);
 
     // Formatting DateTime to desired format
-    String formattedDate = DateFormat('dd MMM yyyy, HH:mm:ss').format(parsedDate);
+    String formattedDate =
+        DateFormat('dd MMM yyyy, HH:mm:ss').format(parsedDate);
 
     return formattedDate;
   }
@@ -452,96 +495,118 @@ class _HistoryHomepageState extends State<HistoryHomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.BgPutih,
-      body: Column(
-        children: [
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: _loadSavedData,
-              child: ListView.builder(
-                itemCount:min(_trackingRecords.length, 2) ,
-                itemBuilder: (context, index) {
-                  final record = _trackingRecords[index];
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 0),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Card(
-                        color: Colors.white,
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 24),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    getCourierLogo(record['courier']),
-                                    AppSpacer.HorizontalSpacerLarge,
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              record['resi'] ?? 'Unknown Resi',
-                                              style: AppFonts.poppinsBold(),
+      body: _trackingRecords.isEmpty
+          ? Column(
+              children: [
+                CardButtonErrorWidget(
+                    TextTitle: 'Tidak Ada Data Riwayat',
+                    TextDesc:
+                        'Silakan lakukan pencarian atau pelacakan paket Anda.',
+                    Icons: AppIcons.IcTrackWhite,
+                    HintText: 'Lacak Paket Saya')
+              ],
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _loadSavedData,
+                    child: ListView.builder(
+                      shrinkWrap:
+                          true, // Tambahkan ini untuk memastikan ukuran mengikuti isi
+                      physics:
+                          NeverScrollableScrollPhysics(), // Agar tidak ada scroll dalam ListView
+                      itemCount: min(_trackingRecords.length, 2),
+                      itemBuilder: (context, index) {
+                        final record = _trackingRecords[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 0),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Card(
+                              color: Colors.white,
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 24),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          getCourierLogo(record['courier']),
+                                          AppSpacer.HorizontalSpacerLarge,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    record['resi'] ??
+                                                        'Unknown Resi',
+                                                    style:
+                                                        AppFonts.poppinsBold(),
+                                                  ),
+                                                  AppSpacer
+                                                      .HorizontalSpacerExtraSmall,
+                                                  GestureDetector(
+                                                    child: Icon(Icons.copy,
+                                                        size: 12),
+                                                    onTap: () {
+                                                      Clipboard.setData(
+                                                        ClipboardData(
+                                                          text:
+                                                              record['resi'] ??
+                                                                  '',
+                                                        ),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                              'Resi disalin ke clipboard'),
+                                                        ),
+                                                      );
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                              getCourierName(record['courier']),
+                                              Text(
+                                                'Pada: ${_formatTimestamp(record["timestamp"])}',
+                                                style: AppFonts.poppinsLight(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _showOptionsDialog(index);
+                                            },
+                                            child: Image.asset(
+                                              AppIcons.IcDeleteRed,
+                                              height: 20,
                                             ),
-                                            AppSpacer
-                                                .HorizontalSpacerExtraSmall,
-                                            GestureDetector(
-                                              child: Icon(Icons.copy, size: 12),
-                                              onTap: () {
-                                                Clipboard.setData(
-                                                  ClipboardData(
-                                                    text: record['resi'] ?? '',
-                                                  ),
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                        'Resi disalin ke clipboard'),
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                        getCourierName(record['courier']),
-                                        Text(
-                                          'Pada: ${_formatTimestamp(record["timestamp"])}',
-                                          style: AppFonts.poppinsLight(
-                                              fontSize: 10),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _showOptionsDialog(index);
-                                      },
-                                      child: Image.asset(
-                                        AppIcons.IcDeleteRed,
-                                        height: 20,
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -579,20 +644,23 @@ class _BookmarkHomepageState extends State<BookmarkHomepage> {
     }
 
     setState(() {
-      savedDataList = loadedData; // Perbarui state dengan data yang diambil
+      savedDataList = loadedData.reversed
+          .toList(); // Perbarui state dengan data yang diambil
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return savedDataList.isEmpty
-        ? Center(
-            child: CardButtonErrorWidget(
-                TextTitle: 'Tidak Ada Data Tersimpan',
-                TextDesc:
-                    'Silahkan Lakukan Pencarian dan Simpan Data Paket Anda.',
-                Icons: AppIcons.IcTrackWhite,
-                HintText: 'Lacak Paket Saya'),
+        ? Column(
+            children: [
+              CardButtonErrorWidget(
+                  TextTitle: 'Tidak Ada Data Tersimpan',
+                  TextDesc:
+                      'Silahkan Lakukan Pencarian dan Simpan Data Paket Anda.',
+                  Icons: AppIcons.IcTrackWhite,
+                  HintText: 'Lacak Paket Saya')
+            ],
           )
         : Column(
             children: [
@@ -600,6 +668,10 @@ class _BookmarkHomepageState extends State<BookmarkHomepage> {
                   child: RefreshIndicator(
                 onRefresh: _loadSavedData,
                 child: ListView.builder(
+                  shrinkWrap:
+                      true, // Tambahkan ini untuk memastikan ukuran mengikuti isi
+                  physics:
+                      NeverScrollableScrollPhysics(), // Agar tidak ada scroll dalam ListView
                   itemCount: min(savedDataList.length, 3),
                   itemBuilder: (context, index) {
                     final data = savedDataList[index];
@@ -951,9 +1023,9 @@ Widget getCourierLogo(String? courier) {
       return LogoIndah();
     case 'jet':
       return LogoJET();
-    case 'jne express':
+    case 'jne':
       return LogoJNE();
-    case 'jnt express':
+    case 'jnt':
       return LogoJNT();
     case 'jnt cargo':
       return LogoJNTCargo();

@@ -576,9 +576,9 @@ Widget getCourierLogo(String? courier) {
       return LogoIndah();
     case 'jet':
       return LogoJET();
-    case 'jne express':
+    case 'jne':
       return LogoJNE();
-    case 'jnt express':
+    case 'jnt':
       return LogoJNT();
     case 'jnt cargo':
       return LogoJNTCargo();

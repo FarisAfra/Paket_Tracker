@@ -176,7 +176,7 @@ class _DetailBookmarkPageState extends State<DetailBookmarkPage> {
                     borderRadius: 5,
                     width: 150,
                     sizeIcons: 16,
-                    Icons: AppIcons.IcTrackWhite,
+                    Icons: AppIcons.IcEditWhite,
                     HintText: 'Edit Data',
                     handler: () async {
                       // Show a dialog or a TextField to enter the new name
@@ -450,9 +450,9 @@ Widget getCourierLogo(String? courier) {
       return LogoIndah();
     case 'jet':
       return LogoJET();
-    case 'jne express':
+    case 'jne':
       return LogoJNE();
-    case 'jnt express':
+    case 'jnt':
       return LogoJNT();
     case 'jnt cargo':
       return LogoJNTCargo();

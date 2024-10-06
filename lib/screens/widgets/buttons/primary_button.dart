@@ -13,6 +13,7 @@ class PrimaryButton extends StatelessWidget {
   final String HintText;
   final double fontSize;
   final Color bgColor;
+  final Color hintColor;
   final VoidCallback handler;
 
   const PrimaryButton({
@@ -22,6 +23,7 @@ class PrimaryButton extends StatelessWidget {
     this.fontSize = 12,
     this.width = 270,
     this.bgColor = AppColors.BiruPrimary,
+    this.hintColor = AppColors.Putih,
     required this.Icons,
     required this.HintText,
     required this.handler,
@@ -49,7 +51,7 @@ class PrimaryButton extends StatelessWidget {
                 AppSpacer.HorizontalSpacerSmall,
                 Text(
                   HintText,
-                  style: AppFonts.poppinsRegular(color: AppColors.Putih, fontSize: fontSize),
+                  style: AppFonts.poppinsRegular(color: hintColor, fontSize: fontSize),
                 )
               ],
             ),

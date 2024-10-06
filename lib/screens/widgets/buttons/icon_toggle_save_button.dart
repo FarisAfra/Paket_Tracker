@@ -1,5 +1,7 @@
 import 'dart:convert'; // Import untuk konversi JSON
 import 'package:flutter/material.dart';
+import 'package:paket_tracker_app/screens/widgets/colors.dart';
+import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,11 +53,14 @@ class _IconToggleSaveButtonState extends State<IconToggleSaveButton> {
       decoration: InputDecoration(
         hintText: 'Masukkan Nama Simpanan',
         prefixIcon: Icon(Icons.save),
+        hintStyle: AppFonts.poppinsRegular(fontSize: 12, color: AppColors.AbuTua),
       ),
       textInputAction: TextInputAction.done,
     ),
     confirmBtnText: 'Simpan',
+    confirmBtnTextStyle: AppFonts.poppinsBold(fontSize: 12, color: AppColors.Putih),
     cancelBtnText: 'Batal',
+    cancelBtnTextStyle: AppFonts.poppinsBold(fontSize: 12, color: AppColors.Merah),
     showCancelBtn: true,
     onConfirmBtnTap: () async {
       String saveName = nameController.text.trim();

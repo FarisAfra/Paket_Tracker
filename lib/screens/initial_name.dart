@@ -55,23 +55,31 @@ Future<void> _saveData() async {
 
   print('Saving data: Name: $name, Address: $address, ImagePath: $imagePath');
 
-  if (name.isNotEmpty && address.isNotEmpty) {
-    try {
-      await DBHelper().insertUserData(name, address, imagePath, id: _userId);
-      print('Data updated successfully');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data updated successfully!')),
-      );
-    } catch (e) {
-      print('Error saving data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update data: $e')),
-      );
-    }
-  } else {
+  if (_selectedImagePath == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please fill in all fields')),
+      SnackBar(content: Text('Silakan tambahkan foto profil terlebih dahulu')),
+    );
+    return;
+  }
+
+  if (name.isEmpty || address.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Silakan isi nama dan alamat Anda')),
+    );
+    return;
+  }
+
+  try {
+    await DBHelper().insertUserData(name, address, imagePath, id: _userId);
+    print('Data updated successfully');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Data Berhasil Disimpan')),
+    );
+  } catch (e) {
+    print('Error saving data: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Gagal Menyimpan Data: $e')),
     );
   }
 

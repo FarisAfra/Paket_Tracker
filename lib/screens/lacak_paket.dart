@@ -7,6 +7,7 @@ import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/icon_toggle_save_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/primary_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/card_button_error_widget.dart';
 import 'package:paket_tracker_app/screens/widgets/errors/card_error_widget.dart';
 import 'package:paket_tracker_app/screens/widgets/errors/card_loading.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
@@ -70,6 +71,17 @@ class _LacakPaketState extends State<LacakPaket> {
                   HasilPencarian(
                     resi: _enteredResi!,
                     courier: _selectedCourier!,
+                  )
+                else
+                  Column(
+                    children: [
+                      CardButtonErrorWidget(
+                          TextTitle: 'Anda Belum Melakukan Pencarian',
+                          TextDesc:
+                              'Silahkan Lakukan Pencarian dan Simpan Data Paket Anda.',
+                          Icons: AppIcons.IcTrackWhite,
+                          HintText: 'Lacak Paket Saya')
+                    ],
                   ),
                 SizedBox(height: 75)
               ],
@@ -369,9 +381,7 @@ class _HasilPencarianState extends State<HasilPencarian> {
                                 ),
                                 Spacer(),
                                 IconToggleSaveButton(
-                                  handler: () {
-                                    
-                                  },
+                                  handler: () {},
                                   dataToSave: {
                                     'awb': awb,
                                     'courier': widget.courier,
@@ -486,9 +496,8 @@ class _HasilPencarianState extends State<HasilPencarian> {
                             Container(
                                 height: 200,
                                 decoration: BoxDecoration(
-                                  color: AppColors.BiruSecondary,
-                                  borderRadius: BorderRadius.circular(8)
-                                ),
+                                    color: AppColors.BiruSecondary,
+                                    borderRadius: BorderRadius.circular(8)),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 8),

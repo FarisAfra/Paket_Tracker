@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:paket_tracker_app/databases/db_helper.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
+import 'package:paket_tracker_app/screens/widgets/errors/error_nodata_screen.dart';
 import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/images/logo_kurir.dart';
@@ -98,7 +99,20 @@ class _RiwayatPencarianState extends State<RiwayatPencarian> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: _loadSavedData,
-              child: ListView.builder(
+              child: _trackingRecords.isEmpty
+              ?Center(
+                child: ErrorNodataScreen(
+                    title: 'Anda Belum Memiliki Riwayat',
+                    desc:
+                        'Silahkan Lakukan Pencarian Dahulu dan\nSimpan Data Paket Anda',
+                    IconButton: AppIcons.IcTrackWhite,
+                    TextButton: 'Lacak Paket Saya',
+                    handler:
+                        () {
+                          
+                        }),
+              )
+              : ListView.builder(
                 itemCount: _trackingRecords.length,
                 itemBuilder: (context, index) {
                   final record = _trackingRecords[index];

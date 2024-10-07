@@ -44,7 +44,8 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
     }
 
     setState(() {
-      savedDataList = loadedData.reversed.toList(); // Perbarui state dengan data yang diambil
+      savedDataList = loadedData.reversed
+          .toList(); // Perbarui state dengan data yang diambil
     });
   }
 
@@ -56,20 +57,35 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
         return Wrap(
           alignment: WrapAlignment.center,
           children: [
-            Container(height: 16,),
-            Text('Pilih Aksi Yang Ingin Dilakukan', style: AppFonts.poppinsSemiBold(fontSize: 16),),
+            Container(
+              height: 16,
+            ),
+            Text(
+              'Pilih Aksi Yang Ingin Dilakukan',
+              style: AppFonts.poppinsSemiBold(fontSize: 16),
+            ),
             Divider(color: AppColors.BgPutih),
             ListTile(
-              leading: Image.asset(AppIcons.IcEditBlue, height: 24,),
-              title: Text('Edit Data', style: AppFonts.poppinsRegular(fontSize: 14),),
+              leading: Image.asset(
+                AppIcons.IcEditBlue,
+                height: 24,
+              ),
+              title: Text(
+                'Edit Data',
+                style: AppFonts.poppinsRegular(fontSize: 14),
+              ),
               onTap: () {
                 Navigator.of(context).pop();
                 _showEditDialog(index);
               },
             ),
             ListTile(
-              leading: Image.asset(AppIcons.IcDeleteRed, height: 24,),
-              title: Text('Hapus Data', style: AppFonts.poppinsRegular(fontSize: 14)),
+              leading: Image.asset(
+                AppIcons.IcDeleteRed,
+                height: 24,
+              ),
+              title: Text('Hapus Data',
+                  style: AppFonts.poppinsRegular(fontSize: 14)),
               onTap: () {
                 Navigator.of(context).pop();
                 _deleteData(index);
@@ -86,43 +102,45 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
         TextEditingController(text: savedDataList[index]['name']);
 
     QuickAlert.show(
-    context: context,
-    type: QuickAlertType.custom,
-    barrierDismissible: true,
-    title: 'Edit Nama',
-    text: 'Masukkan Nama Baru',
-    widget: TextFormField(
-      controller: nameController,
-      decoration: InputDecoration(
-        hintText: 'Masukkan Nama Baru',
-        prefixIcon: Icon(Icons.save),
+      context: context,
+      type: QuickAlertType.custom,
+      barrierDismissible: true,
+      title: 'Edit Nama',
+      text: 'Masukkan Nama Baru',
+      widget: TextFormField(
+        controller: nameController,
+        decoration: InputDecoration(
+          hintText: 'Masukkan Nama Baru',
+          prefixIcon: Icon(Icons.save),
+        ),
+        textInputAction: TextInputAction.done,
       ),
-      textInputAction: TextInputAction.done,
-    ),
-    confirmBtnText: 'Simpan',
-    cancelBtnText: 'Batal',
-    showCancelBtn: true,
-    onConfirmBtnTap: () async {
-      String newName = nameController.text.trim();
-      if (newName.isNotEmpty) {
-        _updateDataName(index, newName); // Memperbarui nama data
-        Navigator.pop(context);
-        await Future.delayed(const Duration(milliseconds: 500)); // Tunggu sebentar sebelum menampilkan notifikasi sukses
-        await QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: "Nama berhasil diperbarui!",
-        );
-      } else {
-        // Tampilkan pesan error jika nama kosong
-        await QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Nama tidak boleh kosong',
-        );
-      }
-    },
-  );
+      confirmBtnText: 'Simpan',
+      cancelBtnText: 'Batal',
+      showCancelBtn: true,
+      onConfirmBtnTap: () async {
+        String newName = nameController.text.trim();
+        if (newName.isNotEmpty) {
+          _updateDataName(index, newName); // Memperbarui nama data
+          Navigator.pop(context);
+          await Future.delayed(const Duration(
+              milliseconds:
+                  500)); // Tunggu sebentar sebelum menampilkan notifikasi sukses
+          await QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: "Nama berhasil diperbarui!",
+          );
+        } else {
+          // Tampilkan pesan error jika nama kosong
+          await QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            text: 'Nama tidak boleh kosong',
+          );
+        }
+      },
+    );
   }
 
   Future<void> _updateDataName(int index, String newName) async {
@@ -166,10 +184,21 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.BgPutih,
-        body: savedDataList.isEmpty
-            ? Center(
+        body: Column(
+          children: [
+            AppSpacer.VerticalSpacerMedium,
+            Text(
+              'Kelola Data Paket Yang Anda Simpan',
+              style: AppFonts.poppinsRegular(),
+            ),
+            AppSpacer.VerticalSpacerSmall,
+            Expanded(
+                child: RefreshIndicator(
+              onRefresh: _loadSavedData,
+              child: savedDataList.isEmpty
+              ?Center(
                 child: ErrorNodataScreen(
-                    title: 'Anda Belum Memiliki Bookmark',
+                    title: 'Anda Belum Memiliki Riwayat',
                     desc:
                         'Silahkan Lakukan Pencarian Dahulu dan\nSimpan Data Paket Anda',
                     IconButton: AppIcons.IcTrackWhite,
@@ -179,90 +208,77 @@ class _BookmarkPaketState extends State<BookmarkPaket> {
                           
                         }),
               )
-            : Column(
-                children: [
-                  AppSpacer.VerticalSpacerMedium,
-                  Text(
-                    'Kelola Data Paket Yang Anda Simpan',
-                    style: AppFonts.poppinsRegular(),
-                  ),
-                  AppSpacer.VerticalSpacerSmall,
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _loadSavedData,
-                      child: ListView.builder(
-                      itemCount: savedDataList.length,
-                      itemBuilder: (context, index) {
-                        final data = savedDataList[index];
-                        return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailBookmarkPage(data: data, index: index,),
+              :ListView.builder(
+                itemCount: savedDataList.length,
+                itemBuilder: (context, index) {
+                  final data = savedDataList[index];
+                  return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailBookmarkPage(
+                                data: data,
+                                index: index,
                               ),
-                            );
-                              },
-                              child: Card(
-                                color: Colors.white,
-                                child: Center(
-                                    child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 24),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          getCourierLogo(data['courier']),
-                                          AppSpacer.HorizontalSpacerLarge,
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  data['name'] ??
-                                                      'Unknown Name',
-                                                  style:
-                                                      AppFonts.poppinsBold()),
-                                              Text(
-                                                '${data['courier2'] ?? 'Unknown Courier'}',
-                                                style: AppFonts.poppinsMedium(
-                                                    fontSize: 10),
-                                              ),
-                                              Text(
-                                                'No. Resi: ${data["awb"] ?? 'Unknown Resi'}',
-                                                style: AppFonts.poppinsLight(
-                                                    fontSize: 10),
-                                              )
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          GestureDetector(
-                                            onTap: () {
-                                              _showOptionsDialog(index);
-                                            },
-                                            child: Image.asset(
-                                              AppIcons.IcMoreBlack,
-                                              height: 20,
-                                            ),
-                                          )
-                                        ],
+                            ),
+                          );
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Center(
+                              child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 24),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    getCourierLogo(data['courier']),
+                                    AppSpacer.HorizontalSpacerLarge,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(data['name'] ?? 'Unknown Name',
+                                            style: AppFonts.poppinsBold()),
+                                        Text(
+                                          '${data['courier2'] ?? 'Unknown Courier'}',
+                                          style: AppFonts.poppinsMedium(
+                                              fontSize: 10),
+                                        ),
+                                        Text(
+                                          'No. Resi: ${data["awb"] ?? 'Unknown Resi'}',
+                                          style: AppFonts.poppinsLight(
+                                              fontSize: 10),
+                                        )
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _showOptionsDialog(index);
+                                      },
+                                      child: Image.asset(
+                                        AppIcons.IcMoreBlack,
+                                        height: 20,
                                       ),
-                                    ],
-                                  ),
-                                )),
-                              ),
-                            ));
-                      },
-                    ),
-                    )
-                  )
-                ],
-              ));
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
+                        ),
+                      ));
+                },
+              ),
+            ))
+          ],
+        ));
   }
 }
 

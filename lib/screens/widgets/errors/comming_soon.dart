@@ -29,27 +29,14 @@ class CommingSoonState extends StatelessWidget {
               style: AppFonts.poppinsRegular(
                   fontSize: 12, color: AppColors.AbuMuda)),
           AppSpacer.VerticalSpacerMedium,
-          PrimaryButton(
-            Icons: AppIcons.IcHomeWhite,
-            HintText: 'Kembali Ke Homepage',
-            bgColor: AppColors.AbuTua, 
-            handler: () { 
-              QuickAlert.show(
-                context: context,
-                type: QuickAlertType.confirm,
-                text: 'Do you want to logout',
-                confirmBtnText: 'Yes',
-                cancelBtnText: 'No',
-                confirmBtnColor: Colors.green,
-                onConfirmBtnTap: () {
-                  
-                },
-                onCancelBtnTap: () {
-                  
-                },
-              );
-             },
-          )
+          // PrimaryButton(
+          //   Icons: AppIcons.IcHomeWhite,
+          //   HintText: 'Kembali Ke Homepage',
+          //   bgColor: AppColors.AbuTua, 
+          //   handler: () { 
+              
+          //    },
+          // )
         ],
       ),
     ));

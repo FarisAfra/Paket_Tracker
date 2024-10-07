@@ -45,12 +45,12 @@ class ErrorNodataScreen extends StatelessWidget {
               style: AppFonts.poppinsRegular(
                   fontSize: 12, color: AppColors.AbuMuda)),
           AppSpacer.VerticalSpacerMedium,
-          PrimaryButton(
-            Icons: IconButton,
-            HintText: TextButton,
-            bgColor: AppColors.BiruPrimary, 
-            handler: handler,
-          )
+          // PrimaryButton(
+          //   Icons: IconButton,
+          //   HintText: TextButton,
+          //   bgColor: AppColors.BiruPrimary, 
+          //   handler: handler,
+          // )
         ],
       ),
     ));

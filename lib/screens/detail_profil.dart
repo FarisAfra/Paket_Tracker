@@ -13,6 +13,7 @@ import 'package:paket_tracker_app/screens/widgets/fonts.dart';
 import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
+import 'package:quickalert/quickalert.dart';
 
 class DetailProfil extends StatefulWidget {
   const DetailProfil({super.key});
@@ -215,7 +216,23 @@ void initState() {
                     bgColor: AppColors.BgPutih,
                     Icons: AppIcons.IcDeleteRed,
                     HintText: 'Hapus Data Dan Logout',
-                    handler: _deleteAllData, 
+                    handler: (){
+                      QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.confirm,
+                    title: 'Hapus Data Akun Dan Logout',
+                    text: 'Apakah kamu Yakin Ingin Menghapus Data Dan Logout',
+                    confirmBtnText: 'Logout',
+                    cancelBtnText: 'Kembali',
+                    confirmBtnColor: AppColors.Merah,
+                    onConfirmBtnTap: () {
+                      _deleteAllData();
+                    },
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                    }, 
                     OutlineColor: AppColors.Merah,)
               ],
             ),

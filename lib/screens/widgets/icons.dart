@@ -32,14 +32,20 @@ class AppIcons {
   static const String IcTrackWhite = 'assets/icons/ic_track_white.png';
   static const String IcHomeWhite = 'assets/icons/ic_home_white.png';
   static const String IcEditWhite = 'assets/icons/ic_edit_white.png';
+  static const String IcOngkirWhite = 'assets/icons/ic_ongkir_white.png';
 
   static const String IcPackageSearchGrey = 'assets/icons/ic_package_search_grey.png';
   static const String IcTruckGrey = 'assets/icons/ic_truck_grey.png';
   static const String IcProfilGrey = 'assets/icons/ic_profile_grey.png';
   static const String IcMapsGrey = 'assets/icons/ic_maps_grey.png';
+  static const String IcAsalGrey = 'assets/icons/ic_asal_grey.png';
+  static const String IcTujuanGrey = 'assets/icons/ic_tujuan_grey.png';
+  static const String IcBeratGrey = 'assets/icons/ic_berat_grey.png';
 
   static const String IcLocationTransparent = 'assets/icons/ic_location_transparent.png';
   static const String IcLocationBigTransparent = 'assets/icons/ic_location_big_transparent.png';
+  static const String IcBoxTransparent = 'assets/icons/ic_box_transparent.png';
+  static const String IcBoxBigTransparent = 'assets/icons/ic_box_big_transparent.png';
   
   static const String IcNavHomeBlack = 'assets/icons/ic_nav_home_black.png';
   static const String IcNavOngkirBlack = 'assets/icons/ic_nav_ongkir_black.png';

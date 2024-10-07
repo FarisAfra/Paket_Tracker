@@ -1,8 +1,11 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:paket_tracker_app/databases/db_helper.dart';
-import 'package:paket_tracker_app/screens/homepage.dart';
+import 'package:paket_tracker_app/screens/initial_name.dart';
+import 'package:paket_tracker_app/screens/notifikasi.dart';
+import 'package:paket_tracker_app/screens/widgets/buttons/icon_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/outline_button.dart';
 import 'package:paket_tracker_app/screens/widgets/buttons/primary_button.dart';
 import 'package:paket_tracker_app/screens/widgets/colors.dart';
@@ -11,47 +14,49 @@ import 'package:paket_tracker_app/screens/widgets/icons.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
 
-class InitialName extends StatefulWidget {
-  const InitialName({super.key});
+class DetailProfil extends StatefulWidget {
+  const DetailProfil({super.key});
 
   @override
-  State<InitialName> createState() => _InitialNameState();
+  State<DetailProfil> createState() => _DetailProfilState();
 }
 
-class _InitialNameState extends State<InitialName> {
+class _DetailProfilState extends State<DetailProfil> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  String? _selectedImagePath; // Store the image path as String
-  final ImagePicker _picker = ImagePicker(); // Instance ImagePicker
+  File? _selectedImage; // Variable untuk menyimpan foto yang dipilih
   int? _userId;
 
-  // Function to pick an image from the gallery
+  // Fungsi untuk memilih foto dari galeri
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
-        _selectedImagePath = pickedFile.path; // Save the path
+        _selectedImage = File(pickedFile.path);
       });
-
-      // Check if the file exists
-      final file = File(_selectedImagePath!); // Create a File from the path
-      if (await file.exists()) {
-        print("File exists: ${file.path}");
-      } else {
-        print("File does not exist: ${file.path}");
-      }
-    } else {
-      print('No image selected.');
     }
+  }
+
+  Future<void> _loadUserData() async {
+  final userData = await DBHelper().getUserData();
   
+  setState(() {
+    _nameController.text = userData['name'] ?? '';
+    _addressController.text = userData['address'] ?? '';
+    _selectedImage = File(userData['imagePath'] ?? 'assets/images/placeholder_avatar2.png');
+    
+    // Get user ID from the userData map if exists
+    _userId = userData['id']; // Assuming you have an 'id' field in your user data
+  });
 }
 
 // Fungsi untuk menyimpan data ke SQLite
 Future<void> _saveData() async {
   String name = _nameController.text.trim();
   String address = _addressController.text.trim();
-  String imagePath = _selectedImagePath ?? 'assets/images/placeholder_avatar2.png';
+  String imagePath = _selectedImage?.path ?? 'assets/images/placeholder_avatar2.png';
 
   print('Saving data: Name: $name, Address: $address, ImagePath: $imagePath');
 
@@ -63,6 +68,8 @@ Future<void> _saveData() async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Data updated successfully!')),
       );
+
+      Navigator.pop(context, {'name': name, 'address': address, 'imagePath': imagePath});
     } catch (e) {
       print('Error saving data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,39 +81,78 @@ Future<void> _saveData() async {
       SnackBar(content: Text('Please fill in all fields')),
     );
   }
+}
 
+
+Future<void> _deleteAllData() async {
+  await DBHelper().deleteAllUserData();
+  setState(() {
+    _nameController.text = '';
+    _addressController.text = '';
+    _selectedImage = null;
+  });
   Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => Homepage(),
+        builder: (context) => InitialName(),
       ),
     );
 }
 
+@override
+void initState() {
+  super.initState();
+  _loadUserData();
+}
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      backgroundColor: AppColors.BiruPrimary,
+      backgroundColor: AppColors.BgPutih,
+      appBar: AppBar(
+        backgroundColor: AppColors.Putih,
+        leading: Row(
+          children: [
+            SizedBox(width: 20),
+            CustomIconButton(
+                icons: AppIcons.IcBackBlue,
+                bgColor: AppColors.Putih,
+                handler: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ),
+        title: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Paket Tracker', style: AppFonts.poppinsLight()),
+              Text('Detail Profil', style: AppFonts.poppinsBold(fontSize: 16)),
+            ],
+          ),
+        ),
+        actions: [
+          CustomIconButton(
+              icons: AppIcons.IcNotificationBlue,
+              handler: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Notifikasi(),
+                  ),
+                );
+              }),
+          SizedBox(width: 20)
+        ],
+      ),
       body: SingleChildScrollView(
-        child: Container(
-          height: size.height,
-          child: Center(
+        child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Halo!',
-                    style: AppFonts.poppinsLight(
-                        color: AppColors.Putih, fontSize: 14)),
-                Text('Selamat Datang',
-                    style: AppFonts.poppinsExtraBold(
-                        color: AppColors.Putih, fontSize: 32)),
-                Text('Di Paket Tracker App',
-                    style: AppFonts.poppinsLight(
-                        color: AppColors.Putih, fontSize: 14)),
-                AppSpacer.VerticalSpacerExtraLarge,
+                SizedBox(height: 48),
                 Stack(
                   children: [
                     Container(
@@ -114,8 +160,8 @@ Future<void> _saveData() async {
                       width: 125,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: _selectedImagePath  != null
-                            ? Image.file(File(_selectedImagePath !), fit: BoxFit.cover)
+                        child: _selectedImage != null
+                            ? Image.file(_selectedImage!, fit: BoxFit.cover)
                             : Image.asset(
                                 'assets/images/placeholder_avatar2.png',
                                 fit: BoxFit.cover,
@@ -126,7 +172,7 @@ Future<void> _saveData() async {
                       height: 125,
                       width: 125,
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.Putih, width: 2),
+                        border: Border.all(color: AppColors.BiruPrimary, width: 2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
@@ -143,7 +189,7 @@ Future<void> _saveData() async {
                 AppSpacer.VerticalSpacerLarge,
                 Text('Siapa Namamu?',
                     style: AppFonts.poppinsMedium(
-                        color: AppColors.Putih, fontSize: 14)),
+                        color: AppColors.Hitam, fontSize: 14)),
                 AppSpacer.VerticalSpacerSmall,
                 CustomTextfieldsIcon(
                     icons: AppIcons.IcProfilGrey,
@@ -152,7 +198,7 @@ Future<void> _saveData() async {
                 AppSpacer.VerticalSpacerSmall,
                 Text('Darimana Asalmu?',
                     style: AppFonts.poppinsMedium(
-                        color: AppColors.Putih, fontSize: 14)),
+                        color: AppColors.Hitam, fontSize: 14)),
                 AppSpacer.VerticalSpacerSmall,
                 CustomTextfieldsIcon(
                     icons: AppIcons.IcMapsGrey,
@@ -160,15 +206,20 @@ Future<void> _saveData() async {
                     controller: _addressController),
                 AppSpacer.VerticalSpacerExtraLarge,
                 PrimaryButton(
-                    bgColor: AppColors.Putih,
-                    Icons: AppIcons.IcSaveNameBlue,
-                    HintText: 'Simpan Data',
-                    hintColor: AppColors.BiruPrimary,
-                    handler: _saveData) // Panggil _saveData saat tombol diklik
+                    Icons: AppIcons.IcEditWhite,
+                    HintText: 'Update Data',
+                    hintColor: AppColors.Putih,
+                    handler: _saveData),
+                AppSpacer.VerticalSpacerExtraLarge,
+                CustomOutlineButton(
+                    bgColor: AppColors.BgPutih,
+                    Icons: AppIcons.IcDeleteRed,
+                    HintText: 'Hapus Data Dan Logout',
+                    handler: _deleteAllData, 
+                    OutlineColor: AppColors.Merah,)
               ],
             ),
           ),
-        ),
       ),
     );
   }

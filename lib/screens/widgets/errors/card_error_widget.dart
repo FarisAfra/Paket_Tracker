@@ -10,14 +10,13 @@ class CardErrorWidget extends StatelessWidget {
   final String TextTitle;
   final String TextDesc;
 
-  const CardErrorWidget({
-    this.PaddingX = 20,
-    this.PaddingY = 16,
-    this.SizeIcons = 62,
-    required this.TextTitle,
-    required this.TextDesc,
-    super.key
-    });
+  const CardErrorWidget(
+      {this.PaddingX = 20,
+      this.PaddingY = 16,
+      this.SizeIcons = 62,
+      required this.TextTitle,
+      required this.TextDesc,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,8 @@ class CardErrorWidget extends StatelessWidget {
               height: SizeIcons,
             ),
             AppSpacer.HorizontalSpacerMedium,
-            Column(
+            Flexible(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -48,6 +48,7 @@ class CardErrorWidget extends StatelessWidget {
                   )
                 ],
               ),
+            )
           ],
         ),
       ),

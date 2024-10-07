@@ -48,6 +48,8 @@ dependencies:
   intl: ^0.18.1
   image_picker: ^1.1.2
   path_provider: ^2.0.11
+  image_picker_web: ^4.0.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

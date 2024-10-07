@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:paket_tracker_app/databases/db_helper.dart';
 import 'package:paket_tracker_app/screens/bookmark_paket.dart';
 import 'package:paket_tracker_app/screens/cek_ongkir.dart';
 import 'package:paket_tracker_app/screens/detail_bookmark.dart';
+import 'package:paket_tracker_app/screens/detail_profil.dart';
 import 'package:paket_tracker_app/screens/lacak_paket.dart';
 import 'package:paket_tracker_app/screens/notifikasi.dart';
 import 'package:paket_tracker_app/screens/riwayat_pencarian.dart';
@@ -37,7 +39,11 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
   String _currentResi = '';
-  Future<Map<String, String>>? _userData;
+  Future<Map<String, dynamic>>? _userData;
+  File? _selectedImage;
+  String _nameController = '';
+  String _addressController = '';
+  int? _userId;
 
   Widget _getCurrentWidget() {
     switch (_currentIndex) {
@@ -67,10 +73,25 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  Future<void> _loadUserData() async {
+    final userData = await DBHelper().getUserData();
+
+    setState(() {
+      _nameController = userData['name'] ?? '';
+      _addressController = userData['address'] ?? '';
+      _selectedImage = File(
+          userData['imagePath'] ?? 'assets/images/placeholder_avatar2.png');
+
+      // Get user ID from the userData map if exists
+      _userId =
+          userData['id']; // Assuming you have an 'id' field in your user data
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _userData = getUserData(); // Panggil fungsi untuk mengambil data pengguna
+    _loadUserData(); // Fetch user data
   }
 
   @override
@@ -80,35 +101,34 @@ class _HomepageState extends State<Homepage> {
       appBar: _currentIndex == 0
           ? AppBar(
               backgroundColor: AppColors.Putih,
-              leading: FutureBuilder<Map<String, String>>(
-                future: _userData,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          CircularProgressIndicator(), // Tampilkan loading indicator sementara
-                    );
-                  } else if (snapshot.hasError) {
-                    return Icon(
-                        Icons.error); // Tampilkan error icon jika ada kesalahan
-                  } else {
-                    String imagePath = snapshot.data?['imagePath'] ??
-                        'assets/images/placeholder_avatar.png';
-
-                    return GestureDetector(
-                        onTap: () {
-                          // Aksi ketika gambar diklik
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(imagePath, height: 36),
-                          ),
-                        ));
-                  }
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DetailProfil()),
+                  ).then((value) {
+                    if (value != null) {
+                      // Update the data on the previous page
+                      setState(() {
+                        _nameController = value['name'];
+                        _addressController = value['address'];
+                        _selectedImage = File(value['imagePath']);
+                      });
+                    }
+                  });
                 },
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: _selectedImage != null
+                        ? Image.file(_selectedImage!, fit: BoxFit.cover)
+                        : Image.asset(
+                            'assets/images/placeholder_avatar2.png',
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                ),
               ),
               title: Center(
                 child: Column(
@@ -117,24 +137,10 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     Text('Halo, Selamat Datang',
                         style: AppFonts.poppinsLight()),
-                    FutureBuilder<Map<String, String>>(
-                      future: _userData,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text('Loading...',
-                              style: AppFonts.poppinsExtraBold(fontSize: 16));
-                        } else if (snapshot.hasError) {
-                          return Text('Error',
-                              style: AppFonts.poppinsExtraBold(fontSize: 16));
-                        } else {
-                          return Text(
-                            snapshot.data?['name'] ?? 'Nama Tidak Ditemukan',
-                            style: AppFonts.poppinsExtraBold(fontSize: 16),
-                          );
-                        }
-                      },
-                    ),
+                    Text(
+                      _nameController,
+                      style: AppFonts.poppinsExtraBold(fontSize: 16),
+                    )
                   ],
                 ),
               ),
@@ -144,13 +150,11 @@ class _HomepageState extends State<Homepage> {
                   handler: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => Notifikasi(),
-                      ),
+                      MaterialPageRoute(builder: (context) => Notifikasi()),
                     );
                   },
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
               ],
             )
           : AppBar(

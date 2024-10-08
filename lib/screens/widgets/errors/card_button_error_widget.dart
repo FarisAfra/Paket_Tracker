@@ -44,6 +44,7 @@ class CardButtonErrorWidget extends StatelessWidget {
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       TextTitle,
@@ -54,16 +55,16 @@ class CardButtonErrorWidget extends StatelessWidget {
                       style: AppFonts.poppinsLight(fontSize: 10),
                     ),
                     AppSpacer.VerticalSpacerExtraSmall,
-                    PrimaryButton(
-                      Icons: Icons,
-                      HintText: HintText,
-                      sizeIcons: 16,
-                      fontSize: 10,
-                      borderRadius: 5,
-                      width: 180,
-                      PaddingY: 5,
-                      handler: () {},
-                    )
+                    // PrimaryButton(
+                    //   Icons: Icons,
+                    //   HintText: HintText,
+                    //   sizeIcons: 16,
+                    //   fontSize: 10,
+                    //   borderRadius: 5,
+                    //   width: 180,
+                    //   PaddingY: 5,
+                    //   handler: () {},
+                    // )
                   ],
                 ),
               )

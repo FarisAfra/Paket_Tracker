@@ -10,6 +10,7 @@ import 'package:paket_tracker_app/screens/widgets/inputs/dropdown_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/inputs/textfields_icon.dart';
 import 'package:paket_tracker_app/screens/widgets/spacer.dart';
 import 'package:http/http.dart' as http;
+import 'package:timeline_tile/timeline_tile.dart';
 
 class CekOngkir extends StatefulWidget {
   const CekOngkir({super.key});
@@ -19,6 +20,16 @@ class CekOngkir extends StatefulWidget {
 }
 
 class _CekOngkirState extends State<CekOngkir> {
+  Map<String, dynamic>?
+      _ongkirResult; // Pindahkan variabel _ongkirResult ke sini
+
+  // Callback untuk menerima hasil dari CekOngkirWidget
+  void _updateOngkirResult(Map<String, dynamic> result) {
+    setState(() {
+      _ongkirResult = result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +40,149 @@ class _CekOngkirState extends State<CekOngkir> {
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Column(
               children: [
-                CekOngkirWidget(),
+                CekOngkirWidget(
+                    onResultReceived:
+                        _updateOngkirResult), // Kirim callback ke widget anak
                 AppSpacer.VerticalSpacerLarge,
+                //munculkan result/hasilnya disini
+                if (_ongkirResult != null) ...[
+                  Text('Hasil Ongkos Kirim:',
+                      style: AppFonts.poppinsBold(fontSize: 16)),
+                  ListView.builder(
+                    shrinkWrap: true, // Agar tidak menyebabkan overflow
+                    physics:
+                        NeverScrollableScrollPhysics(), // Nonaktifkan scroll di dalam ListView
+                    itemCount: _ongkirResult!['rajaongkir']['results'].length,
+                    itemBuilder: (context, index) {
+                      final ongkirItem =
+                          _ongkirResult!['rajaongkir']['results'][index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: Card(
+                          color: AppColors.Putih,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                getCourierLogo(ongkirItem['code']),
+                                AppSpacer.VerticalSpacerSmall,
+                                Text('${ongkirItem['name']}',
+                                    style: AppFonts.poppinsSemiBold()),
+                                AppSpacer.VerticalSpacerSmall,
+                                Divider(color: AppColors.BgPutih),
+                                TimelineTile(
+                                    alignment: TimelineAlign.start,
+                                    isFirst: true,
+                                    indicatorStyle: IndicatorStyle(
+                                        color: AppColors.Hitam, width: 10),
+                                    beforeLineStyle: LineStyle(
+                                        color: AppColors.AbuMuda, thickness: 2),
+                                    endChild: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AppSpacer.VerticalSpacerLarge,
+                                          Text(
+                                            'Asal:',
+                                            style: AppFonts.poppinsLight(
+                                                fontSize: 12),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                                '${_ongkirResult!['rajaongkir']['origin_details']['type']} ${_ongkirResult!['rajaongkir']['origin_details']['city_name']} - ${_ongkirResult!['rajaongkir']['origin_details']['province']},  ${_ongkirResult!['rajaongkir']['origin_details']['postal_code']}',
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppFonts.poppinsBold(
+                                                    fontSize: 14)),
+                                          ),
+                                          AppSpacer.VerticalSpacerLarge
+                                        ],
+                                      ),
+                                    )),
+                                TimelineTile(
+                                    alignment: TimelineAlign.start,
+                                    isLast: true,
+                                    indicatorStyle: IndicatorStyle(
+                                        color: AppColors.AbuMuda, width: 10),
+                                    beforeLineStyle: LineStyle(
+                                        color: AppColors.AbuMuda, thickness: 2),
+                                    endChild: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AppSpacer.VerticalSpacerLarge,
+                                          Text(
+                                            'Tujuan:',
+                                            style: AppFonts.poppinsLight(
+                                                fontSize: 12),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                                '${_ongkirResult!['rajaongkir']['destination_details']['type']} ${_ongkirResult!['rajaongkir']['destination_details']['city_name']} - ${_ongkirResult!['rajaongkir']['destination_details']['province']}, ${_ongkirResult!['rajaongkir']['destination_details']['postal_code']}',
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppFonts.poppinsBold(
+                                                    fontSize: 14)),
+                                          ),
+                                          AppSpacer.VerticalSpacerLarge
+                                        ],
+                                      ),
+                                    )),
+                                Divider(color: AppColors.BgPutih),
+                                if (ongkirItem['costs'].isNotEmpty)
+                                  Column(
+                                    children:
+                                        ongkirItem['costs'].map<Widget>((cost) {
+                                      return Column(
+                                        children: [
+                                          Container(
+                                        padding: EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.BiruSecondary,
+                                          borderRadius: BorderRadius.circular(8)
+                                        ),
+                                        child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                              '${cost['service']} - ${cost['description']}',
+                                              style: AppFonts.poppinsSemiBold(
+                                                  fontSize: 14)),
+                                          Text(
+                                              'Ongkos Kirim: Rp ${cost['cost'][0]['value']}', style: AppFonts.poppinsLight(
+                                                  fontSize: 12)),
+                                          Text(
+                                              'Estimasi Waktu: ${cost['cost'][0]['etd']} Hari', style: AppFonts.poppinsLight(
+                                                  fontSize: 12)),
+                                        ],
+                                      ),
+                                      ),
+                                      AppSpacer.VerticalSpacerSmall
+                                        ],
+                                      );
+                                    }).toList(),
+                                  )
+                                else
+                                  Text('Biaya: Tidak tersedia', style: AppFonts.poppinsSemiBold(
+                                                  fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+                SizedBox(
+                  height: 100,
+                )
               ],
             ),
           )),
@@ -39,7 +191,10 @@ class _CekOngkirState extends State<CekOngkir> {
 }
 
 class CekOngkirWidget extends StatefulWidget {
-  const CekOngkirWidget({super.key});
+  final Function(Map<String, dynamic>) onResultReceived; // Tambahkan callback
+
+  const CekOngkirWidget(
+      {super.key, required this.onResultReceived}); // Tambahkan required
 
   @override
   State<CekOngkirWidget> createState() => _CekOngkirWidgetState();
@@ -165,18 +320,20 @@ class _CekOngkirWidgetState extends State<CekOngkirWidget> {
               child: Image.asset(AppIcons.IcBoxBigTransparent),
             ),
             Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text('Cek Ongkir Paket',
                           style: AppFonts.poppinsRegular(fontSize: 18)),
                       Text(
-                          'Silahkan Masukkan Detail Paket yang Akan Anda Kirim',
-                          style: AppFonts.poppinsExtraLight(fontSize: 12)),
+                        'Silahkan Masukkan Detail Paket yang Akan Anda Kirim',
+                        style: AppFonts.poppinsExtraLight(fontSize: 12),
+                        textAlign: TextAlign.center,
+                      ),
                       AppSpacer.VerticalSpacerSmall,
 
                       // Dropdown untuk Provinsi Asal
@@ -286,13 +443,34 @@ class _CekOngkirWidgetState extends State<CekOngkirWidget> {
                       ),
                       AppSpacer.VerticalSpacerSmall,
 
-                      // Input Berat Paket
-                      CustomTextfieldsIcon(
-                        controller: _beratController,
-                        icons: AppIcons.IcBeratGrey,
-                        hintText: 'Estimasi Berat Paket',
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Opsional:',
+                            style: AppFonts.poppinsRegular(
+                                color: AppColors.Merah, fontSize: 10),
+                          ),
+
+                          AppSpacer.VerticalSpacerExtraSmall,
+
+                          // Input Berat Paket
+                          CustomTextfieldsIcon(
+                            controller: _beratController,
+                            icons: AppIcons.IcBeratGrey,
+                            hintText: 'Estimasi Berat Paket',
+                          ),
+
+                          Text(
+                            '*Isi Dengan Angka Saja dalam satuan Gram\nBerat Default 1000 Gram',
+                            style: AppFonts.poppinsRegular(
+                                color: AppColors.AbuTua, fontSize: 10),
+                          ),
+
+                          AppSpacer.VerticalSpacerMedium,
+                        ],
                       ),
-                      AppSpacer.VerticalSpacerMedium,
 
                       // Tombol Cek Ongkos Kirim
                       PrimaryButton(
@@ -305,7 +483,9 @@ class _CekOngkirWidgetState extends State<CekOngkirWidget> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                   content: Text(
-                                      'Silakan pilih kota asal, kota tujuan, dan kurir.')),
+                                'Silakan pilih kota asal, kota tujuan, dan kurir.',
+                                style: AppFonts.poppinsRegular(),
+                              )),
                             );
                             return;
                           }
@@ -331,15 +511,8 @@ class _CekOngkirWidgetState extends State<CekOngkirWidget> {
 
                           if (response.statusCode == 200) {
                             final jsonData = jsonDecode(response.body);
-                            final ongkir = jsonData;
-
-                            // Tampilkan hasil ongkos kirim
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      OngkirResult(ongkir: ongkir)),
-                            );
+                            widget.onResultReceived(
+                                jsonData); // Panggil callback dengan hasil
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
